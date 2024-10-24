@@ -1,31 +1,44 @@
 import Phaser from 'phaser';
+import Play from './scenes/Play';
+import Init from './scenes/Init';
 
+/* Game dimensions */
+const height = 480;
+const width = 816;
+
+/* Shared configurations between scenes */
+const sharedConfig = {
+    width: width,
+    height: height,
+}
+
+const Scenes = [Init, Play]; /* Array of Scene classes */
+
+/* For each scene, create an instance and pass in the configurations to its constructor */
+const createScene = Scene => new Scene(sharedConfig);
+const initScenes = () => Scenes.map(createScene);
+
+/* Game configuration settings */
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    height: height,
+    width: width,
+    parent: 'game-container', /* Attach to #game-container element */
+    backgroundColor: '#000017',
     physics: {
         default: 'arcade',
         arcade: {
             gravity: {
                 y: 200
-            }
-        }
+            },
+            debug: true,
+        },
     },
-    scene: {
-        preload: preload,
-        create: create,
-        update: update
-    }
+    pixelArt: true,
+    scene: initScenes() /* Return an array of initialised scenes */
 };
 
-new Phaser.Game(config);
-
-function preload() {
-}
-
-function create() {
-}
-
-function update() {
+/* Function to start the game with the defined configurations */
+export function loadGame() {
+    new Phaser.Game(config);
 }
