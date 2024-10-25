@@ -3,8 +3,8 @@ import Play from './scenes/Play';
 import Init from './scenes/Init';
 
 /* Game dimensions */
-const height = 480;
-const width = 816;
+const width = 800;
+const height = 425;
 
 /* Shared configurations between scenes */
 const sharedConfig = {
@@ -29,7 +29,7 @@ const config = {
         default: 'arcade',
         arcade: {
             gravity: {
-                y: 200
+                y: 500
             },
             debug: true,
         },

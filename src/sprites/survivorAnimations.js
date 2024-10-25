@@ -1,7 +1,6 @@
 export default anims => {
-    // Quick frame 0 quickly before switching to idle
     anims.create({
-        key: 'idle-start',
+        key: 'idle-start', // Quick frame 0 quickly before switching to idle
         frames: anims.generateFrameNumbers('survivor', {frames: [0]}),
         frameRate: 7,
         repeat: 0 // Play once
@@ -21,5 +20,21 @@ export default anims => {
         }),
         frameRate: 7,
         repeat: -1
+    });
+
+    anims.create({
+        key: 'jump', // Jump animation
+        frames: anims.generateFrameNumbers('survivor', {
+            start: 16, end: 19
+        }),
+        frameRate: 7,
+        repeat: 0
+    });
+
+    anims.create({
+        key: 'crouch', // Crouch animation
+        frames: anims.generateFrameNumbers('survivor', {frames: [24]}),
+        frameRate: 1,
+        repeat: 0
     });
 };

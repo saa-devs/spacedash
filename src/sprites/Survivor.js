@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import initAnimations from './survivorAnimations'
+import collidable from '../mixins/collidable'
 
 class Survivor extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
@@ -7,18 +8,23 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
+        Object.assign(this, collidable);
+
         this.init();
         this.initEvents();
     }
 
     init() {
-        this.gravity = 500;
-        this.playerSpeed = 200;
+        this.gravity = 700;
+        this.jumpVelocity = -700;
+        this.playerSpeed = 250;
 
         /* Input: Set up A and D keys for movement */
         this.keys = this.scene.input.keyboard.addKeys({
             a: Phaser.Input.Keyboard.KeyCodes.A,
-            d: Phaser.Input.Keyboard.KeyCodes.D
+            d: Phaser.Input.Keyboard.KeyCodes.D,
+            w: Phaser.Input.Keyboard.KeyCodes.W,
+            s: Phaser.Input.Keyboard.KeyCodes.S
         });
 
         this.body.setGravityY(this.gravity);
@@ -34,30 +40,46 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(args) {
-        const {a, d} = this.keys;
+        const { a, d, w } = this.keys;
+        const onFloor = this.body.onFloor(); // Check if player is on the ground
 
         /* Move left or right based on key input */
         if (a.isDown) {
-            this.setVelocityX(-this.playerSpeed); // Flip sprite to face left
-            this.setFlipX(true)
+            this.setVelocityX(-this.playerSpeed);
+            this.setFlipX(true); // Face left
         } else if (d.isDown) {
-            this.setVelocityX(this.playerSpeed); // Flip sprite to face right
-            this.setFlipX(false)
+            this.setVelocityX(this.playerSpeed);
+            this.setFlipX(false); // Face right
         } else {
             this.setVelocityX(0); // Stop moving
         }
 
-        /* If the player's velocity is not 0, play the walk animation */
-        if (this.body.velocity.x !== 0) {
-            this.play('walk', true);
+        /* Trigger the jump animation and set upward velocity */
+        if (Phaser.Input.Keyboard.JustDown(w) && onFloor) {
+            this.setVelocityY(this.jumpVelocity);
+            this.play('jump', true); // Play jump animation
         }
 
-        /* Play idle-start if stopped, then switch to idle */
-        if (this.body.velocity.x === 0 && (!this.anims.currentAnim || this.anims.currentAnim.key !== 'idle')) {
-            this.play('idle-start', true);
-            this.once('animationcomplete-idle-start', () => {
-                this.play('idle', true); // Switch to idle after idle-start animation
-            });
+        /* Ensure the jump animation plays while airborne */
+        if (!onFloor && (!this.anims.currentAnim || this.anims.currentAnim.key !== 'jump')) {
+            this.play('jump', true); // Keep playing jump animation while in the air
+        }
+
+        /* Play walk animation if moving and on the ground */
+        if (onFloor && this.body.velocity.x !== 0) {
+            if (!this.anims.currentAnim || this.anims.currentAnim.key !== 'walk') {
+                this.play('walk', true);
+            }
+        }
+
+        /* Play idle animation if stopped and on the ground */
+        if (onFloor && this.body.velocity.x === 0) {
+            if (!this.anims.currentAnim || this.anims.currentAnim.key !== 'idle') {
+                this.play('idle-start', true);
+                this.once('animationcomplete-idle-start', () => {
+                    this.play('idle', true); // Play idle after idle-start animation
+                });
+            }
         }
     }
 }
