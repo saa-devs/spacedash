@@ -2,13 +2,15 @@
   "name": "spacedash",
   "version": "1.0.0",
   "scripts": {
-    "start": "parcel index.html"
+    "start": "node server.js",
+    "build": "parcel index.html --dist-dir dist"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "express": "^4.21.1",
     "phaser": "^3.86.0"
   },
   "devDependencies": {

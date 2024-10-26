@@ -18,9 +18,9 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
     }
 
     init() {
-        this.gravity = 500;
-        this.jumpVelocity = -300;
-        this.playerSpeed = 200;
+        this.gravity = 1300;
+        this.jumpVelocity = -600;
+        this.playerSpeed = 225;
 
         /* Input: Set up A and D keys for movement */
         this.keys = this.scene.input.keyboard.addKeys({
@@ -32,9 +32,11 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
 
         this.body.setGravityY(this.gravity);
         this.setCollideWorldBounds(true);
+        this.setSize(8, 27);
+        this.setOffset(13, 5);
         this.setOrigin(0.5, 1);
 
-        /* Initialise survivor player animations */
+        /* Initialise survivor sprites animations */
         initAnimations(this.scene.anims);
     }
 
@@ -44,8 +46,8 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(args) {
-        const {a, d, w} = this.keys;
-        const onFloor = this.body.onFloor(); // Check if player is on the ground
+        const {a, d, w, s} = this.keys;
+        const onFloor = this.body.onFloor(); // Check if sprites is on the ground
 
         /* Move left or right based on key input */
         if (a.isDown) {
@@ -74,6 +76,14 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
             if (!this.anims.currentAnim || this.anims.currentAnim.key !== 'walk') {
                 this.play('walk', true);
             }
+        }
+
+        if (s.isDown && onFloor) {
+            this.setVelocityX(0); // Stop horizontal movement when crouching
+            if (!this.anims.currentAnim || this.anims.currentAnim.key !== 'crouch') {
+                this.play('crouch', true);
+            }
+            return;
         }
 
         /* Play idle animation if stopped and on the ground */

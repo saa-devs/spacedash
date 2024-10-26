@@ -1,4 +1,5 @@
 import Survivor from "../sprites/Survivor";
+import Undead from "../sprites/Undead"
 
 class Play extends Phaser.Scene {
     constructor(config) {
@@ -12,36 +13,44 @@ class Play extends Phaser.Scene {
         const map = this.createMap().map;
         const tileset = this.createMap().tileset;
         const layers = this.createLayers(map, tileset);
-        const levelBounds = this.getPlayerBounds(layers.levelBoundsLayer); // Start and end zones of the player
+        const levelBounds = this.getPlayerBounds(layers.levelBoundsLayer); // Start and end zones of the sprites
 
         this.scaleFactor = 4; /* How much to scale up the map by */
         /* Get the layer height and multiply by scaleFactor to get the visually rendered height   */
         const scaledLayerHeight = layers.terrainLayer.height * this.scaleFactor;
 
         const offsetX = 0; // Horizontal offset - move map to the left edge of the game-container
-        const offsetY = 100; // Vertical offset of map
+        const offsetY = (this.scale.height - scaledLayerHeight) / 2; // Vertical offset of map
 
-        /* Create the player and pass in offset values to position start and end zones of player */
+        /* Create the sprites and pass in offset values to position start and end zones of sprites */
         const survivor = this.createPlayer(layers, levelBounds.start, offsetX, offsetY);
-        this.createPlayerColliders(survivor, { // Enable collision between player and terrain layer
+        const undead = this.createUndead()
+
+        this.createPlayerColliders(survivor, { // Enable collision between sprites and terrain layer
             colliders: {
-                terrainLayer: layers.terrainLayer
+                terrainLayer: layers.terrainLayer}
+        });
+
+        this.createUndeadColliders(undead, { colliders: {
+                terrainLayer: layers.terrainLayer,
+                survivor
             }
         });
 
-        /* Scale up all layers and player by scaleFactor (4) */
+        /* Scale up all layers and sprites by scaleFactor (4) */
         layers.backgroundLayer.setScale(this.scaleFactor);
         layers.terrainLayer.setScale(this.scaleFactor);
         layers.foregroundLayer.setScale(this.scaleFactor);
         layers.decorationLayer.setScale(this.scaleFactor);
         survivor.setScale(this.scaleFactor);
+        undead.setScale(this.scaleFactor);
 
-        layers.backgroundLayer.setPosition(offsetX, 100);
-        layers.foregroundLayer.setPosition(offsetX, 100);
-        layers.terrainLayer.setPosition(offsetX, 100);
-        layers.decorationLayer.setPosition(offsetX, 100);
+        layers.backgroundLayer.setPosition(offsetX, offsetY);
+        layers.foregroundLayer.setPosition(offsetX, offsetY);
+        layers.terrainLayer.setPosition(offsetX, offsetY);
+        layers.decorationLayer.setPosition(offsetX, offsetY);
 
-        this.setupCamera(survivor, layers); /* Set up camera to follow the player */
+        this.setupCamera(survivor, layers); /* Set up camera to follow the sprites */
         this.createEndOfLevel(survivor, levelBounds.end, offsetX, offsetY); /* Define end of level zone */
 
         /* Enable the lighting system and set ambient lighting */
@@ -54,14 +63,17 @@ class Play extends Phaser.Scene {
         layers.terrainLayer.setTint(0x867db0);
     }
 
-    /* Create player */
     createPlayer(layers, start, offsetX, offsetY) {
         const startX = start.x * this.scaleFactor;
         const startY = start.y * this.scaleFactor + offsetY;
         return new Survivor(this, startX, startY);
     }
 
-    /* Define end of level zone and console log the player has won when they overlap with the end zone */
+    createUndead() {
+        return new Undead(this, 200, 200);
+    }
+
+    /* Define end of level zone and console log the sprites has won when they overlap with the end zone */
     createEndOfLevel(survivor, end, offsetX, offsetY) {
         const endX = end.x * this.scaleFactor;
         const endY = end.y * this.scaleFactor + offsetY;
@@ -76,8 +88,12 @@ class Play extends Phaser.Scene {
         });
     }
 
-    createPlayerColliders(survivor, {colliders}) {
+    createPlayerColliders(survivor, { colliders }) {
         survivor.addCollider(colliders.terrainLayer);
+    }
+
+    createUndeadColliders(undead, { colliders }) {
+        undead.addCollider(colliders.terrainLayer).addCollider(colliders.survivor);
     }
 
     setupCamera(survivor, layers) {
@@ -91,7 +107,7 @@ class Play extends Phaser.Scene {
         this.physics.world.setBounds(0, 0, scaledLayerWidth, scaledLayerHeight);
         this.cameras.main.setBounds(0, 0, scaledLayerWidth, scaledLayerHeight);
 
-        /* Center the camera on the player and start following and fix the y-position of camera to center
+        /* Center the camera on the sprites and start following and fix the y-position of camera to center
            of the game height */
         this.cameras.main.startFollow(survivor, true, 1, 0);
         this.cameras.main.setFollowOffset(0, (height - scaledLayerHeight) / 2);

@@ -33,8 +33,8 @@ export default anims => {
 
     anims.create({
         key: 'crouch', // Crouch animation
-        frames: anims.generateFrameNumbers('survivor', {frames: [24]}),
-        frameRate: 1,
+        frames: anims.generateFrameNumbers('survivor', {frames: [24, 25]}),
+        frameRate: 7,
         repeat: 0
     });
 };

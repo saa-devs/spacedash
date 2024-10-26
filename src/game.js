@@ -3,8 +3,8 @@ import Play from './scenes/Play';
 import Init from './scenes/Init';
 
 /* Game dimensions */
-const width = 800;
-const height = 500;
+const width = 1000;
+const height = 700;
 
 /* Shared configurations between scenes */
 const sharedConfig = {
@@ -28,7 +28,6 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true
         },
     },
     pixelArt: true,
