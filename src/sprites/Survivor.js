@@ -8,16 +8,19 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
+        /* Defines the Survivor object's collision behaviour by adding all properties and methods from the
+           collidable mixin to this instance */
         Object.assign(this, collidable);
 
+        /* Initial setup */
         this.init();
         this.initEvents();
     }
 
     init() {
-        this.gravity = 700;
-        this.jumpVelocity = -700;
-        this.playerSpeed = 250;
+        this.gravity = 500;
+        this.jumpVelocity = -300;
+        this.playerSpeed = 200;
 
         /* Input: Set up A and D keys for movement */
         this.keys = this.scene.input.keyboard.addKeys({
@@ -29,6 +32,7 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
 
         this.body.setGravityY(this.gravity);
         this.setCollideWorldBounds(true);
+        this.setOrigin(0.5, 1);
 
         /* Initialise survivor player animations */
         initAnimations(this.scene.anims);
@@ -40,7 +44,7 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(args) {
-        const { a, d, w } = this.keys;
+        const {a, d, w} = this.keys;
         const onFloor = this.body.onFloor(); // Check if player is on the ground
 
         /* Move left or right based on key input */

@@ -4,7 +4,7 @@ import Init from './scenes/Init';
 
 /* Game dimensions */
 const width = 800;
-const height = 425;
+const height = 500;
 
 /* Shared configurations between scenes */
 const sharedConfig = {
@@ -28,10 +28,7 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: {
-                y: 500
-            },
-            debug: true,
+            debug: true
         },
     },
     pixelArt: true,
