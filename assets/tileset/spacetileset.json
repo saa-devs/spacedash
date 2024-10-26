@@ -120,9 +120,56 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":6,
+         "name":"enemyspawns",
+         "objects":[
+                {
+                 "height":0,
+                 "id":8,
+                 "name":"enemyspawn",
+                 "point":true,
+                 "rotation":0,
+                 "type":"Undead",
+                 "visible":true,
+                 "width":0,
+                 "x":343.407724615005,
+                 "y":79.5871047329649
+                }, 
+                {
+                 "height":0,
+                 "id":9,
+                 "name":"enemyspawn",
+                 "point":true,
+                 "rotation":0,
+                 "type":"Undead",
+                 "visible":true,
+                 "width":0,
+                 "x":376.602274778841,
+                 "y":143.449349674434
+                }, 
+                {
+                 "height":0,
+                 "id":10,
+                 "name":"enemyspawn",
+                 "point":true,
+                 "rotation":0,
+                 "type":"Undead",
+                 "visible":true,
+                 "width":0,
+                 "x":573.027622314497,
+                 "y":111.034694464423
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":6,
- "nextobjectid":8,
+ "nextlayerid":7,
+ "nextobjectid":11,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.0",

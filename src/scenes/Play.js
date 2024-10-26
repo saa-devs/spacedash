@@ -1,5 +1,5 @@
 import Survivor from "../sprites/Survivor";
-import Undead from "../sprites/Undead"
+import {getEnemyTypes} from "../spriteTypes/enemyTypes";
 
 class Play extends Phaser.Scene {
     constructor(config) {
@@ -24,14 +24,16 @@ class Play extends Phaser.Scene {
 
         /* Create the sprites and pass in offset values to position start and end zones of sprites */
         const survivor = this.createPlayer(layers, levelBounds.start, offsetX, offsetY);
-        const undead = this.createUndead()
+        const enemies = this.createEnemies(layers.enemySpawnsLayer, offsetX, offsetY);
 
         this.createPlayerColliders(survivor, { // Enable collision between sprites and terrain layer
             colliders: {
-                terrainLayer: layers.terrainLayer}
+                terrainLayer: layers.terrainLayer
+            }
         });
 
-        this.createUndeadColliders(undead, { colliders: {
+        this.createEnemyColliders(enemies, {
+            colliders: {
                 terrainLayer: layers.terrainLayer,
                 survivor
             }
@@ -43,7 +45,6 @@ class Play extends Phaser.Scene {
         layers.foregroundLayer.setScale(this.scaleFactor);
         layers.decorationLayer.setScale(this.scaleFactor);
         survivor.setScale(this.scaleFactor);
-        undead.setScale(this.scaleFactor);
 
         layers.backgroundLayer.setPosition(offsetX, offsetY);
         layers.foregroundLayer.setPosition(offsetX, offsetY);
@@ -69,8 +70,14 @@ class Play extends Phaser.Scene {
         return new Survivor(this, startX, startY);
     }
 
-    createUndead() {
-        return new Undead(this, 200, 200);
+    createEnemies(enemySpawnsLayer, offsetX, offsetY) {
+        const enemyTypes = getEnemyTypes(); /* Retrieve an object of enemy type classes from enemyTypes.js */
+        /* For each enemy spawned on tileset map, create a new enemy of that type */
+        return enemySpawnsLayer.objects.map(spawnPoint => {
+            const startX = spawnPoint.x * this.scaleFactor;
+            const startY = spawnPoint.y * this.scaleFactor + offsetY;
+            return new enemyTypes[spawnPoint.type](this, startX, startY);
+        });
     }
 
     /* Define end of level zone and console log the sprites has won when they overlap with the end zone */
@@ -88,12 +95,14 @@ class Play extends Phaser.Scene {
         });
     }
 
-    createPlayerColliders(survivor, { colliders }) {
+    createPlayerColliders(survivor, {colliders}) {
         survivor.addCollider(colliders.terrainLayer);
     }
 
-    createUndeadColliders(undead, { colliders }) {
-        undead.addCollider(colliders.terrainLayer).addCollider(colliders.survivor);
+    createEnemyColliders(theUndead, {colliders}) {
+        theUndead.forEach(undead => {
+            undead.addCollider(colliders.terrainLayer).addCollider(colliders.survivor);
+        });
     }
 
     setupCamera(survivor, layers) {
@@ -135,9 +144,10 @@ class Play extends Phaser.Scene {
         const terrainLayer = map.createLayer('terrain', tileset, 0, 0);
         const decorationLayer = map.createLayer('decoration', tileset, 0, 0);
         const levelBoundsLayer = map.getObjectLayer('levelbounds');
+        const enemySpawnsLayer = map.getObjectLayer('enemyspawns');
 
         terrainLayer.setCollisionByExclusion([-1]);
-        return {backgroundLayer, foregroundLayer, terrainLayer, decorationLayer, levelBoundsLayer};
+        return {backgroundLayer, foregroundLayer, terrainLayer, decorationLayer, levelBoundsLayer, enemySpawnsLayer};
     }
 }
 

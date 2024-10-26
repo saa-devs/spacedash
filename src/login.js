@@ -4,7 +4,7 @@ import {loadGame} from './game.js';
 const loginButton = document.getElementById('login-button');
 
 /* Once clicked, hide the login button and load the game */
-loginButton.addEventListener('click', (e) => {
+loginButton.addEventListener('click', () => {
     loginButton.style.display = 'none';
     loadGame();
 });

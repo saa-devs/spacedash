@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import initAnimations from './survivorAnimations'
+import initAnimations from '../animations/survivorAnimations'
 import collidable from '../mixins/collidable'
 
 class Survivor extends Phaser.Physics.Arcade.Sprite {

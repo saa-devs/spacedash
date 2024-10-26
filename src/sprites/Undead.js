@@ -1,32 +1,23 @@
-import Phaser from 'phaser';
-import collidable from '../mixins/collidable'
+import Enemy from './Enemy'
+import initAnimations from "../animations/undeadAnimations";
+import Phaser from "phaser";
 
-class Undead extends Phaser.Physics.Arcade.Sprite {
+/* Undead is a type of enemy and extends from super class Enemy */
+class Undead extends Enemy {
     constructor(scene, x, y) {
         super(scene, x, y, 'undead');
         scene.add.existing(this);
         scene.physics.add.existing(this);
-
-        /* Defines the Survivor object's collision behaviour by adding all properties and methods from the
-           collidable mixin to this instance */
-        Object.assign(this, collidable);
-
-        /* Initial setup */
-        this.init();
+        initAnimations(this.scene.anims);
     }
 
-    init() {
-        this.gravity = 450;
-        this.playerSpeed = 300;
+    initEvents() {
+        /* Listen for the scene's update event */
+        this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
+    }
 
-        this.body.setGravityY(this.gravity);
-        this.setCollideWorldBounds(true);
-        this.setImmovable(true);
-        this.setSize(8, 27);
-        this.setOffset(12, 5);
-        this.setOrigin(0.5, 1);
-
-        /* Initialise survivor sprites animations */
+    update(args) {
+        this.play('undead-idle', true);
     }
 }
 

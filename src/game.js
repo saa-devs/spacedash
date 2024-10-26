@@ -20,7 +20,7 @@ const initScenes = () => Scenes.map(createScene);
 
 /* Game configuration settings */
 const config = {
-    type: Phaser.AUTO,
+    type: Phaser.WEBGL,
     height: height,
     width: width,
     parent: 'game-container', /* Attach to #game-container element */
