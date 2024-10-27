@@ -27,8 +27,7 @@ const config = {
     backgroundColor: '#000017',
     physics: {
         default: 'arcade',
-        arcade: {
-        },
+        arcade: {},
     },
     pixelArt: true,
     scene: initScenes() /* Return an array of initialised scenes */

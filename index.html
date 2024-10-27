@@ -19,23 +19,21 @@
             <div id="game-ui">
                 <h1>Welcome to <span class="spacedash">spacedash</span></h1>
                 <!-- User login form -->
-                <form id="login-form" method="POST" action="/login">
+                <form id="login-form" method="POST" action="/">
                     <!-- Input fields -->
                     <div id="input-container">
                         <label for="username">
-                            <input id="username" type="text" placeholder="username" required>
+                            <input id="username" type="text" name="username" placeholder="username" value="test" required>
                         </label>
                         <label for="password">
-                            <input id="password" type="text" placeholder="password" required>
+                            <input id="password" type="text" name="password" placeholder="password" value="test" required>
                         </label>
                     </div>
-                    <!-- Buttons -->
-                    <div id="button-container">
-                        <button type="submit" id="login-button">login</button>
-                        <!-- Force login to the game -->
-                        <button id="dev-login">dev login</button>
-                    </div>
+                    <!-- Login button-->
+                    <button type="submit" id="login-button">login</button>
                 </form>
+                <!-- Force login to the game -->
+                <button id="dev-login">dev login</button>
             </div>
         </div>
     </div>
