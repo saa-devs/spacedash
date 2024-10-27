@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- Stylesheet for page layout -->
-    <link rel="stylesheet" href="src/styles.css">
+    <link rel="stylesheet" href="static/css/styles.css">
     <!-- Script to handle login and load game -->
     <script type="module" src="src/login.js"></script>
     <title>spacedash</title>
@@ -16,7 +16,27 @@
     <div id="content">
         <!-- Container for game scene -->
         <div id="game-container">
-            <button id="login-button">login</button>
+            <div id="game-ui">
+                <h1>Welcome to <span class="spacedash">spacedash</span></h1>
+                <!-- User login form -->
+                <form id="login-form" method="POST" action="/login">
+                    <!-- Input fields -->
+                    <div id="input-container">
+                        <label for="username">
+                            <input id="username" type="text" placeholder="username" required>
+                        </label>
+                        <label for="password">
+                            <input id="password" type="text" placeholder="password" required>
+                        </label>
+                    </div>
+                    <!-- Buttons -->
+                    <div id="button-container">
+                        <button type="submit" id="login-button">login</button>
+                        <!-- Force login to the game -->
+                        <button id="dev-login">dev login</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </main>

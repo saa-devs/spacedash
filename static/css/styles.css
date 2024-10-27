@@ -1,0 +1,87 @@
+@font-face {
+    font-family: 'roboto-mono';
+    src: url('/static/fonts/roboto-mono.ttf') format('tff') /* Modern browsers */
+}
+
+/* Universal styling for padding, margin, and box sizing */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000017;
+}
+
+/* TYPOGRAPHY */
+h1 {
+    font-family: 'roboto-mono', sans-serif;
+    font-size: 3.5em;
+    font-weight: 300;
+    color: white;
+    margin-top: 50px;
+}
+
+.spacedash {
+    color: #41dba0;
+}
+
+/* Center main content */
+#content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000017;
+    height: 700px;
+    width: 1000px;
+}
+
+#game-ui {
+    padding: 100px;
+    height: 100%;
+    width: 100%;
+}
+
+#login-form {
+    margin-top: 50px;
+}
+
+#input-container, #button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    row-gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* INPUT FIELDS */
+#username, #password {
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: #191f2c;
+    border-radius: 7px;
+    border: none;
+    color: #c8cad9;
+    padding: 5px 10px;
+    height: 40px;
+    width: 250px;
+}
+
+/* BUTTONS */
+#login-button, #dev-login {
+    font-size: 14px;
+    background-color: #41dba0;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    height: 40px;
+    width: 250px;
+}
