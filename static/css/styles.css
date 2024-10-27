@@ -54,7 +54,7 @@ h1 {
     margin-top: 50px;
 }
 
-#input-container, #button-container {
+#input-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -84,4 +84,12 @@ h1 {
     cursor: pointer;
     height: 40px;
     width: 250px;
+}
+
+#login-button {
+    margin-bottom: 10px;
+}
+
+#dev-login {
+    background-color: #e13960;
 }
