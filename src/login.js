@@ -1,10 +1,11 @@
 import {loadGame} from './game.js';
 
-/* Select the login button element */
+const gameUI = document.getElementById('game-ui');
 const loginButton = document.getElementById('login-button');
+const devLogin = document.getElementById('dev-login');
 
 /* Once clicked, hide the login button and load the game */
-loginButton.addEventListener('click', () => {
-    loginButton.style.display = 'none';
+devLogin.addEventListener('click', () => {
+    gameUI.style.display = 'none';
     loadGame();
 });
