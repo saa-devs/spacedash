@@ -1,7 +1,7 @@
-import survivor from '../../assets/sprites/survivor.png';
-import undead from '../../assets/sprites/undead.png';
-import tilemapJSON from '../../assets/tileset/spacetileset.json';
-import tilesetImage from '../../assets/tileset/spacetileset.png';
+import survivor from '../../game-assets/sprites/survivor.png';
+import undead from '../../game-assets/sprites/undead.png';
+import tilemapJSON from '../../game-assets/tileset/spacetileset.json';
+import tilesetImage from '../../game-assets/tileset/spacetileset.png';
 
 class Init extends Phaser.Scene {
     constructor() {
@@ -25,7 +25,7 @@ class Init extends Phaser.Scene {
         });
     }
 
-    /* Once assets are loaded, start the 'play' scene */
+    /* Once game-assets are loaded, start the 'play' scene */
     create() {
         this.scene.start('play');
     }
