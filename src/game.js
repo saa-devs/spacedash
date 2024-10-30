@@ -23,7 +23,7 @@ const config = {
     type: Phaser.WEBGL,
     height: height,
     width: width,
-    parent: 'game-container', /* Attach to #game-container element */
+    parent: 'game-div', /* Attach to #game-div element */
     backgroundColor: '#000017',
     physics: {
         default: 'arcade',

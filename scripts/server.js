@@ -5,6 +5,8 @@
  */
 
 const {checkCredentials, registerUser} = require('../aws/dynamodb');
+const {getAllCharacterURLs} = require('../aws/s3');
+
 const express = require('express'); // Import web server
 const path = require('path');
 const bodyParser = require('body-parser'); // To read incoming requests in JSON format
@@ -18,17 +20,21 @@ app.use(express.static(path.join(__dirname, '../dist')));
 app.use(bodyParser.json());
 
 /**
- * POST /login
+ * Handles user login requests.
  *
- * Handles login requests by validating login credentials against the DynamoDB database.
- * Responds with a success message if credentials are valid, or an error message otherwise.
+ * This endpoint is used to verify user credentials (username and password).
+ * It checks the credentials against DynamoDB and responds with a success or error message.
  *
- * @param {Object} req - The request object containing the login credentials.
- * @param {Object} req.body - The request body.
- * @param {string} req.body.username - The username to be checked.
- * @param {string} req.body.password - The password to be checked.
- * @param {Object} res - The response object.
- * @returns {void}
+ * @route POST /login
+ * @async
+ * @param {Object} req - The request object containing login credentials.
+ * @param {Object} req.body - The body of the request.
+ * @param {string} req.body.username - The username to be authenticated.
+ * @param {string} req.body.password - The password to be authenticated.
+ * @param {Object} res - The response object used to send back the result.
+ * @returns {void} Sends a JSON response indicating the success or failure of the login process.
+ *
+ * @throws {Error} Will send a 401 status code if the credentials are invalid.
  */
 app.post('/login', async (req, res) => {
     /* Retrieve login credentials from POST request */
@@ -47,22 +53,62 @@ app.post('/login', async (req, res) => {
 });
 
 /**
- * POST /register
+ * Handles user registration requests.
  *
- * Handles registration requests by creating a new user account with new
- * username and password in the DynamoDB database.
+ * Creates a new user account with a given username and password.
+ * It attempts to register the user, and responds with appropriate success or error messages.
  *
- * @param {Object} req - The request object containing the registration details.
- * @param {Object} req.body - The request body.
+ * @route POST /register
+ * @async
+ * @param {Object} req - The request object containing registration details.
+ * @param {Object} req.body - The body of the request.
  * @param {string} req.body.createUsername - The desired username for the new account.
  * @param {string} req.body.createPassword - The password for the new account.
- * @param {Object} res - The response object.
- * @returns {void}
+ * @param {Object} res - The response object used to send back the result.
+ * @returns {void} Sends a JSON response indicating the success or failure of the registration process.
+ *
+ * @throws {Error} Will send a 500 status code if an unexpected error occurs during registration.
  */
 app.post('/register', async (req, res) => {
     /* Retrieve registration details from POST request */
     const {createUsername, createPassword} = req.body;
-    await registerUser(createUsername, createPassword);
+    const response = await registerUser(createUsername, createPassword);
+
+    if (response.success) {
+        return res.status(200).json({message: response.message});
+    } else {
+        if (response.message === 'This username already exists') {
+            return res.status(409).json({message: response.message});
+        } else {
+            return res.status(500).json({message: response.message});
+        }
+    }
+});
+
+/**
+ * GET /characters - Fetches character image URLs.
+ *
+ * This route handles GET requests to retrieve character image URLs.
+ * It calls the `getAllCharacterURLs` function to get the URLs from AWS S3 and
+ * returns them in a JSON response with a 200 status code. If an error occurs, it
+ * logs the error and responds with a 500 status code and an error message.
+ *
+ * @name GET /characters
+ * @function
+ * @async
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {JSON} 200 - A JSON object containing character image URLs.
+ * @returns {JSON} 500 - An error message if the retrieval fails.
+ */
+app.get('/characters', async (req, res) => {
+    try {
+        const characterURLs = await getAllCharacterURLs();
+        res.status(200).json(characterURLs);
+    } catch (error) {
+        console.error('Error fetching character images:', error);
+        res.status(500).json({ error: 'Failed to retrieve character images' });
+    }
 });
 
 /**
