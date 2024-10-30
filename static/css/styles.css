@@ -15,13 +15,34 @@ body {
     font-family: 'roboto-mono', sans-serif;
 }
 
-/* TYPOGRAPHY */
-h1 {
-    font-size: 3em;
-    font-weight: 300;
-    color: white;
+/* GAME CONTAINER */
+/* Center main content */
+#game-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
+#game-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000017;
+    height: 700px;
+    width: 1000px;
+    padding: 50px;
+}
+
+#auth-ui, #profile-ui {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    row-gap: 10px;
+}
+
+/* LOGIN AND REGISTER PAGE*/
 #account-msg {
     font-size: 14px;
     font-weight: 300;
@@ -36,42 +57,6 @@ h1 {
     cursor: pointer;
 }
 
-.spacedash {
-    color: #41dba0;
-}
-
-/* Center main content */
-#content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-#game-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #000017;
-    height: 700px;
-    width: 1000px;
-}
-
-#game-ui {
-    display: flex;
-    flex-direction: column;
-    padding: 100px;
-    height: 100%;
-    width: 100%;
-}
-
-#auth-div {
-    display: flex;
-    flex-direction: column;
-    row-gap: 10px;
-    padding-top: 50px;
-}
-
 #login-form, #register-form {
     display: flex;
     flex-direction: column;
@@ -83,6 +68,85 @@ h1 {
     flex-direction: column;
     justify-content: center;
     row-gap: 10px;
+}
+
+/* TYPOGRAPHY FOR LOGIN AND REGISTER PAGE */
+
+/* 'Welcome to spacedash' heading */
+h1 {
+    font-size: 3em;
+    font-weight: 300;
+    color: white;
+    padding: 50px 0;
+}
+
+/* 'spacedash' span within 'Welcome to spacedash' heading */
+.spacedash {
+    color: #41dba0;
+}
+
+/* PROFILE PAGE */
+#profile-ui {
+    display: flex;
+    flex-direction: column;
+    row-gap: 50px;
+}
+
+#sprite-select {
+    display: flex;
+    column-gap: 20px;
+    height: 120px;
+}
+
+/* Hide the radio input */
+.character-radio {
+    display: none;
+}
+
+/* Circular container around each image */
+.character-label {
+    display: inline-flex;
+    height: 120px;
+    width: 120px;
+    border-radius: 15px;
+    background-color: #191f2c;
+    border: 2px solid transparent; /* Initially transparent */
+    padding: 5px 5px 20px;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Default style for images */
+.character-image {
+    object-fit: contain;
+    image-rendering: pixelated;
+    transition: transform 0.3s ease;
+}
+
+/* Scale up the image on hover */
+.character-label:hover .character-image {
+    transform: scale(1.2);
+}
+
+/* Change border color of label when the associated radio input is checked */
+.character-radio:checked + .character-label {
+    border-color: #41dba0; /* Blue border for selected state */
+    box-shadow: 0 0 5px rgba(65, 178, 135, 0.5); /* Optional glow effect */
+}
+
+#action-menu {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+/* TYPOGRAPHY FOR PROFILE PAGE */
+#character-heading {
+    color: #41dba0;
+    font-size: 1.1em;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    padding: 20px 0;
 }
 
 /* INPUT FIELDS */
@@ -104,7 +168,8 @@ h1 {
 }
 
 /* BUTTONS */
-#play-button, #login-button, #register-button, #go-back-button {
+#login-button, #register-button, #play-button,
+#stats-button, #leaderboard-button, #logout-button {
     font-size: 14px;
     background-color: #41dba0;
     border-radius: 7px;
@@ -112,10 +177,40 @@ h1 {
     cursor: pointer;
     height: 40px;
     width: 250px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
-#register-button {
+/* Hover effect */
+#login-button:hover, #register-button:hover, #play-button:hover {
+    background-color: #87ffcf; /* Darker green on hover */
+}
+
+#login-button:active, #register-button:active, #play-button:active {
+    background-color: #b2ffde; /* Darker green on hover */
+}
+
+#register-button, #stats-button, #leaderboard-button {
     background-color: #ffc34b;
+}
+
+#register-button:hover, #stats-button:hover, #leaderboard-button:hover {
+    background-color: #ffd37d;
+}
+
+#register-button:active, #stats-button:active, #leaderboard-button:active {
+    background-color: #ffe9c3;
+}
+
+#logout-button {
+    background-color: #e13960;
+}
+
+#logout-button:hover {
+    background-color: #f65279;
+}
+
+#logout-button:active {
+    background-color: #ffbecc;
 }
 
 /* ERRORS */

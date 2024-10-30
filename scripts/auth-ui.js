@@ -5,12 +5,11 @@
  * login and register by validating inputs before sending them to auth-ui.js for server communication.
  */
 
-import {loadGame} from '/src/game.js';
 import {validUsername, validPassword, matchingPassword} from '/scripts/validation'
-import {checkCredentials, registerUser} from '/scripts/auth'
+import {checkCredentials, registerUser} from '/scripts/request'
+import {loadProfile} from "./profile-ui";
 
-const gameUI = document.getElementById('game-ui');
-const authDiv = document.getElementById('auth-div');
+const authUI = document.getElementById('auth-ui');
 const loginForm = document.getElementById('login-form');
 let errorMsg = document.getElementById('error-msg');
 const accountMsg = document.getElementById('account-msg');
@@ -34,17 +33,16 @@ loginForm.addEventListener('submit', async (event) => {
     const isValid = await checkCredentials(username, password);
 
     if (isValid) {
-        gameUI.style.display = 'none';
-        loadGame();
+        authUI.style.display = 'none';
+        await loadProfile();
     }
 });
 
 /**
- * auth-ui.js
+ * Validates the provided username, password, and password confirmation before sending the
+ * registration request to the server. If the registration is successful, it displays the user's profile;
+ * otherwise, it displays the appropriate error message.
  *
- * Handles registration form submission and attempts to register a new user.
- * Validates the provided username, password, and password confirmation before
- * sending the registration request to the server.
  */
 registerForm.addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent form from refreshing the page
@@ -55,7 +53,16 @@ registerForm.addEventListener('submit', async (event) => {
     const confirmPassword = document.getElementById('confirm-password').value;
 
     if (validRegisterDetails(createUsername, createPassword, confirmPassword)) {
-        await registerUser(createUsername, createPassword);
+        const response = await registerUser(createUsername, createPassword);
+        const data = await response.json();
+
+        if (response.ok) {
+            errorMsg.innerHTML = '';
+            authUI.style.display = 'none';
+            await loadProfile();
+        } else if (response.status === 409) {
+            errorMsg.innerHTML = data.message;
+        }
     }
 });
 
@@ -67,13 +74,13 @@ registerLink.addEventListener('click', () => {
     errorMsg.innerText = '';
     loginForm.style.display = 'none'; // Remove login form
     registerLink.style.display = 'none'; // Remove 'Click here to register' link
-    loginLink.style.display = 'inline-block'; //Display 'Click here to login' link
+    loginLink.style.display = 'inline-block'; // Display 'Click here to login' link
 
     accountMsg.innerText = 'Already have an account? ';
     accountMsg.appendChild(loginLink);
 
     registerForm.style.display = 'flex'; // Display register form
-    authDiv.appendChild(registerForm);
+    authUI.insertBefore(registerForm, authUI.children[1]);
 });
 
 /**
@@ -90,7 +97,7 @@ loginLink.addEventListener('click', () => {
 
     registerLink.style.display = 'inline-block'; // Display 'Click here to register' link
     loginForm.style.display = 'flex'; // Display login form
-    authDiv.appendChild(loginForm);
+    authUI.insertBefore(loginForm, authUI.children[1]);
 });
 
 /**
@@ -110,10 +117,10 @@ function createRegisterForm() {
             <input id="create-username" type="text" name="create-username" placeholder="Create a username" required>
         </label>
         <label for="create-password">
-            <input id="create-password" type="text" name="password" placeholder="Create a password" required>
+            <input id="create-password" type="password" name="password" placeholder="Create a password" required>
         </label>
         <label for="confirm-password">
-            <input id="confirm-password" type="text" name="password" placeholder="Confirm your password" required>
+            <input id="confirm-password" type="password" name="password" placeholder="Confirm your password" required>
         </label>
         <button type="submit" id="register-button">register</button>
     `;

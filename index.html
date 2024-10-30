@@ -8,35 +8,32 @@
     <link rel="stylesheet" href="static/css/styles.css">
     <!-- Script to handle login and load game -->
     <script type="module" src="/scripts/auth-ui.js"></script>
-    <script type="module" src="/scripts/game-ui.js"></script>
     <title>spacedash</title>
 </head>
 <body>
 <header></header>
 <main>
-    <div id="content">
+    <div id="game-content">
         <!-- Container for game scene -->
-        <div id="game-container">
-            <div id="game-ui">
-                <h1>Welcome to <span class="spacedash">spacedash</span></h1>
-                <!-- To display and register forms. HTML will dynamically change when user clicks 'Click here to register'
-                      to display the register form -->
-                <div id="auth-div">
-                    <form id="login-form" method="POST" action="/login">
-                        <label for="username">
-                            <input id="username" type="text" name="username" placeholder="username" value="test"
-                                   required>
-                        </label>
-                        <label for="password">
-                            <input id="password" type="text" name="password" placeholder="password" value="test"
-                                   required>
-                        </label>
-                        <button type="submit" id="login-button">login</button>
-                    </form>
-                </div>
-                <div id="error-div"><p id="error-msg"></p></div>
-                <p id="account-msg">Don't have an account? <span id="register-link">Click here to register</span></p>
-            </div>
+        <div id="game-div">
+                    <!-- To display and register forms. HTML will dynamically change when user clicks 'Click here to register'
+                          to display the register form -->
+                    <div id="auth-ui">
+                        <h1>Welcome to <span class="spacedash">spacedash</span></h1>
+                        <form id="login-form" method="POST" action="/login">
+                            <label for="username">
+                                <input id="username" type="text" name="username" placeholder="username" value="test"
+                                       required>
+                            </label>
+                            <label for="password">
+                                <input id="password" type="text" name="password" placeholder="password" value="test"
+                                       required>
+                            </label>
+                            <button type="submit" id="login-button">login</button>
+                        </form>
+                        <div id="error-div"><p id="error-msg"></p></div>
+                        <p id="account-msg">Don't have an account? <span id="register-link">Click here to register</span></p>
+                    </div>
         </div>
     </div>
 </main>

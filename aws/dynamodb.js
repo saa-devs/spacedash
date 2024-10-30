@@ -12,8 +12,10 @@ require('dotenv').config();
  * Create DynamoDB client with credentials and region from environment variables.
  */
 const client = new DynamoDBClient({
-    region: String(process.env.AWS_REGION), credentials: {
-        accessKeyId: String(process.env.AWS_ACCESS_KEY_ID), secretAccessKey: String(process.env.AWS_SECRET_ACCESS_KEY),
+    region: String(process.env.AWS_REGION),
+    credentials: {
+        accessKeyId: String(process.env.AWS_ACCESS_KEY_ID),
+        secretAccessKey: String(process.env.AWS_SECRET_ACCESS_KEY),
     },
 });
 
@@ -70,7 +72,7 @@ const registerUser = async (username, password) => {
     } catch (error) {
         if (error.name === 'ConditionalCheckFailedException') {
             console.error("Username already exists");
-            return {success: false, message: 'Username already exists'};
+            return {success: false, message: 'This username already exists'};
         }
         console.error("Error registering user:", error);
         return {success: false, message: 'Error registering user'};
