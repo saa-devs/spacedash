@@ -11,12 +11,8 @@ class Undead extends Enemy {
         initAnimations(this.scene.anims);
     }
 
-    initEvents() {
-        /* Listen for the scene's update event */
-        this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
-    }
-
-    update(args) {
+    update(time, delta) {
+        super.update(time, delta);
         this.play('undead-idle', true);
     }
 }
