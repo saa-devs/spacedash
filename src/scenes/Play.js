@@ -43,7 +43,7 @@ class Play extends Phaser.Scene {
 
         // Create the player and enemy sprites, and pass in values to position their start and end zones
         const survivor = this.createPlayer(layers, levelBounds.start, offsetX, offsetY);
-        const enemies = this.createEnemies(layers.enemySpawnsLayer, offsetX, offsetY, layers.terrainLayer);
+        const enemies = this.createEnemies(layers.enemySpawnsLayer, offsetX, offsetY, layers.terrainLayer, survivor);
 
         // Enable player collision with terrain layer
         this.createPlayerColliders(survivor, {
@@ -133,8 +133,7 @@ class Play extends Phaser.Scene {
      * @param {object} start - The starting position for the player.
      * @param {number} offsetX - The horizontal offset for positioning.
      * @param {number} offsetY - The vertical offset for positioning.
-     * @returns {Survivor} The created player character.
-     */
+     * */
     createPlayer(layers, start, offsetX, offsetY) {
         const startX = start.x * this.scaleFactor;
         const startY = start.y * this.scaleFactor + offsetY;
@@ -148,16 +147,17 @@ class Play extends Phaser.Scene {
      * @param {number} offsetX - The horizontal offset for positioning.
      * @param {number} offsetY - The vertical offset for positioning.
      * @param {object} terrainLayer - The terrain layer for setting collision.
-     * @returns {Enemies} The group of created enemies.
+     * @param {Phaser.GameObjects.Sprite} survivor - The player character that the enemy may follow.
+     * @returns {Enemies} - The group of created enemies.
      */
-    createEnemies(enemySpawnsLayer, offsetX, offsetY, terrainLayer) {
+    createEnemies(enemySpawnsLayer, offsetX, offsetY, terrainLayer, survivor) {
         const enemies = new Enemies(this);
         const enemyTypes = enemies.getTypes();
 
         enemySpawnsLayer.objects.forEach((spawnPoint) => {
             const startX = spawnPoint.x * this.scaleFactor;
             const startY = spawnPoint.y * this.scaleFactor + offsetY;
-            const enemy = new enemyTypes[spawnPoint.type](this, startX, startY);
+            const enemy = new enemyTypes[spawnPoint.type](this, startX, startY, survivor);
             enemy.setTerrainColliders(terrainLayer);
             enemies.add(enemy);
         });
