@@ -3,8 +3,8 @@ import initAnimations from "../animations/undeadAnimations";
 
 /* Undead is a type of enemy and extends from super class Enemy */
 class Undead extends Enemy {
-    constructor(scene, x, y) {
-        super(scene, x, y, 'undead');
+    constructor(scene, x, y, survivor) {
+        super(scene, x, y, 'undead', survivor);
         scene.add.existing(this);
         scene.physics.add.existing(this);
         initAnimations(this.scene.anims);
