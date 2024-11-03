@@ -1,3 +1,8 @@
+/**
+ * A function to create animations for the undead enemy.
+ *
+ * @param {Phaser.Animations.AnimationManager} anims - The animation manager used to create and manage animations.
+ */
 export default anims => {
     if (!anims.exists('undead-idle')) {
         anims.create({

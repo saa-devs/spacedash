@@ -164,30 +164,12 @@ class Play extends Phaser.Scene {
         return enemies;
     }
 
-    /**
-     * Creates colliders for the player to interact with the terrain layer.
-     * @param {Survivor} survivor - The player character. This class uses a mixin to add the addCollider method.
-     * @param {object} options - The options object containing colliders.
-     */
     createPlayerColliders(survivor, {colliders}) {
         survivor.addCollider(colliders.terrainLayer);
     }
 
-    /**
-     * Creates colliders for the enemies to interact with the terrain and the player.
-     * @param {Enemies} enemies - The group of enemies. This class uses a mixin to add the addCollider method.
-     * @param {object} options - The options object containing colliders.
-     */
     createEnemyColliders(enemies, {colliders}) {
         enemies.addCollider(colliders.terrainLayer).addCollider(colliders.survivor);
-    }
-
-    setLayerScale() {
-
-    }
-
-    setPositionScale() {
-
     }
 
     /**
