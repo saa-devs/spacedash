@@ -4,9 +4,8 @@
  */
 
 import Phaser from 'phaser';
-
-const initAnimations = require('../animations/survivorAnimations');
-const collidable = require('../mixins/collidable');
+import initAnimations from '../animations/survivorAnimations';
+import collidable from '../mixins/collidable';
 
 class Survivor extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {

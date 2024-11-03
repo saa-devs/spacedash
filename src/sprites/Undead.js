@@ -1,6 +1,5 @@
 import Enemy from './Enemy'
 import initAnimations from "../animations/undeadAnimations";
-import Phaser from "phaser";
 
 /* Undead is a type of enemy and extends from super class Enemy */
 class Undead extends Enemy {

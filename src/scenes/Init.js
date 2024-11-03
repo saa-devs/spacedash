@@ -4,10 +4,10 @@
  * and then starts the 'play' scene.
  */
 
-const survivor = require('../../game-assets/sprites/survivor.png');
-const undead = require('../../game-assets/sprites/undead.png');
-const tilemapJSON = require('../../game-assets/tileset/spacetileset.json');
-const tilesetImage = require('../../game-assets/tileset/spacetileset.png');
+import survivor from '../../game-assets/sprites/survivor.png';
+import undead from '../../game-assets/sprites/undead.png';
+import tilemapJSON from '../../game-assets/tileset/spacetileset.json';
+import tilesetImage from '../../game-assets/tileset/spacetileset.png';
 
 /**
  * @class Init
