@@ -12,4 +12,13 @@ export default anims => {
             repeat: -1
         });
     }
+
+    if (!anims.exists('undead-hit')) {
+        anims.create({
+            key: 'undead-hit',
+            frames: anims.generateFrameNumbers('undead', {frames: [12, 13, 14, 15]}),
+            frameRate: 10,
+            repeat: 0
+        });
+    }
 };

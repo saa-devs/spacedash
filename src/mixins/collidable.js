@@ -48,8 +48,6 @@ export default {
                 ray: this.prevRay, hasHit: this.prevHasHit,
             }
         }
-        // Log to the console when hitting a platform (for debugging)
-        console.log('Hitting the platform')
         const line = new Phaser.Geom.Line();
         let hasHit = false;
 

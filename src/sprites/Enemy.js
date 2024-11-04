@@ -20,6 +20,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, key);
         scene.add.existing(this);
         scene.physics.add.existing(this);
+        this.config = scene.config;
 
         // Add collision properties and methods from the collidable mixin
         Object.assign(this, collidable);
@@ -47,13 +48,14 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.currentWalkDistance = 0;
         this.turnDelay = 500;
 
+        this.damage = 1;
+
         /**
          * @property {Phaser.GameObjects.Graphics} rayGraphics - Graphics object used for debugging raycasting.
          */
         this.rayGraphics = this.scene.add.graphics({
             lineStyle: {
-                width: 2,
-                color: 0xaa00aa
+                width: 2, color: 0xaa00aa
             }
         });
 
@@ -73,15 +75,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
      */
     initEvents() {
         this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
-    }
-
-    /**
-     * Sets the survivor (player) for the enemy to follow.
-     *
-     * @param {Phaser.GameObjects.Sprite} survivor - The player character.
-     */
-    setSurvivor(survivor) {
-        this.survivor = survivor;
     }
 
     /**
@@ -106,13 +99,10 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.currentWalkDistance += Math.abs(this.body.deltaX());
 
         const {ray, hasHit} = this.rayCast(this.body, this.terrainColliderLayer, {
-            rayLength: 90,
-            precision: 1,
-            steepness: 0.5
+            rayLength: 90, precision: 1, steepness: 0.5
         });
 
-        if ((!hasHit || this.currentWalkDistance >= this.maxWalkDistance)
-            && (time - this.timeSinceLastTurn > this.turnDelay)) {
+        if ((!hasHit || this.currentWalkDistance >= this.maxWalkDistance) && (time - this.timeSinceLastTurn > this.turnDelay)) {
             this.flipDirection();
             this.timeSinceLastTurn = time;
             this.currentWalkDistance = 0;
@@ -122,8 +112,10 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
             this.followSurvivor();
         }
 
-        this.rayGraphics.clear();
-        this.rayGraphics.strokeLineShape(ray);
+        if (this.config.debug && ray) {
+            this.rayGraphics.clear();
+            this.rayGraphics.strokeLineShape(ray);
+        }
     }
 
     /**
@@ -139,12 +131,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
      * Makes the enemy follow the survivor if within detection range.
      */
     followSurvivor() {
-        const distanceToPlayer = Phaser.Math.Distance.Between(
-            this.x,
-            this.y,
-            this.survivor.x,
-            this.survivor.y
-        );
+        const distanceToPlayer = Phaser.Math.Distance.Between(this.x, this.y, this.survivor.x, this.survivor.y);
 
         if (distanceToPlayer < this.detectionRange) {
             if (this.survivor.x < this.x) {
@@ -158,6 +145,15 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityX(this.speed);
             this.setFlipX(this.speed < 0);
         }
+    }
+
+    /**
+     * Sets the survivor (player) for the enemy to follow.
+     *
+     * @param {Phaser.GameObjects.Sprite} survivor - The player character.
+     */
+    setSurvivor(survivor) {
+        this.survivor = survivor;
     }
 
     /**

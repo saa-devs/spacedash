@@ -3,8 +3,8 @@
  * The Play scene handles creating the game world, player and enemies.
  */
 
-import Survivor from "../sprites/Survivor";
-import Enemies from "../groups/Enemies";
+import Survivor from '../sprites/Survivor';
+import Enemies from '../groups/Enemies';
 
 /**
  * @class Play
@@ -55,8 +55,7 @@ class Play extends Phaser.Scene {
         // Enable enemy collision with terrain layer and the player
         this.createEnemyColliders(enemies, {
             colliders: {
-                terrainLayer: layers.terrainLayer,
-                survivor
+                terrainLayer: layers.terrainLayer, survivor
             }
         });
 
@@ -147,7 +146,7 @@ class Play extends Phaser.Scene {
      * @param {number} offsetX - The horizontal offset for positioning.
      * @param {number} offsetY - The vertical offset for positioning.
      * @param {object} terrainLayer - The terrain layer for setting collision.
-     * @param {Phaser.GameObjects.Sprite} survivor - The player character that the enemy may follow.
+     * @param survivor
      * @returns {Enemies} - The group of created enemies.
      */
     createEnemies(enemySpawnsLayer, offsetX, offsetY, terrainLayer, survivor) {
@@ -169,7 +168,11 @@ class Play extends Phaser.Scene {
     }
 
     createEnemyColliders(enemies, {colliders}) {
-        enemies.addCollider(colliders.terrainLayer).addCollider(colliders.survivor);
+        enemies.addCollider(colliders.terrainLayer).addCollider(colliders.survivor, this.onSurvivorCollision.bind(this));
+    }
+
+    onSurvivorCollision(enemy, survivor) {
+        survivor.handleHit(enemy);
     }
 
     /**
