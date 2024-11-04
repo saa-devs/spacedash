@@ -8,10 +8,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b9651be2-136e-4a86-9eef-e7920a38b8aa" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/attacks/Shoot.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/gamebar/HealthBar.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/animations/survivorAnimations.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/animations/survivorAnimations.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/animations/undeadAnimations.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/animations/undeadAnimations.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mixins/collidable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/mixins/collidable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/Init.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/Init.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/scenes/Play.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/Play.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sprites/Enemy.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sprites/Enemy.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sprites/Undead.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sprites/Undead.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sprites/Survivor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sprites/Survivor.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,6 +117,7 @@
       <workItem from="1730522574694" duration="606000" />
       <workItem from="1730544148039" duration="6816000" />
       <workItem from="1730621324813" duration="16602000" />
+      <workItem from="1730696336923" duration="12944000" />
     </task>
     <servers />
   </component>

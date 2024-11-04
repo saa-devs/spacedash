@@ -6,6 +6,9 @@
 
 import survivor from '../../game-assets/sprites/survivor.png';
 import undead from '../../game-assets/sprites/undead.png';
+import particles from '../../game-assets/effects/particle.png';
+import hp from '../../game-assets/ui/hp.png';
+import beam from '../../game-assets/effects/beam.png';
 import tilemapJSON from '../../game-assets/tileset/spacetileset.json';
 import tilesetImage from '../../game-assets/tileset/spacetileset.png';
 
@@ -31,17 +34,22 @@ class Init extends Phaser.Scene {
         // Load the tilemap JSON file and the corresponding tileset image
         this.load.tilemapTiledJSON('tilemap', tilemapJSON);
         this.load.image('tileset', tilesetImage);
+        this.load.image('particle', particles);
+        this.load.image('beam', beam);
 
         // Load the survivor spritesheet
         this.load.spritesheet('survivor', survivor, {
-            frameWidth: 32,
-            frameHeight: 32
+            frameWidth: 32, frameHeight: 32
         });
 
         // Load the undead spritesheet
         this.load.spritesheet('undead', undead, {
-            frameWidth: 32,
-            frameHeight: 32
+            frameWidth: 32, frameHeight: 32
+        });
+
+        // In your scene's preload method
+        this.load.spritesheet('hp', hp, {
+            frameWidth: 8, frameHeight: 8
         });
     }
 

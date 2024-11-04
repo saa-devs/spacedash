@@ -25,6 +25,8 @@ const HEIGHT = 700;
 const sharedConfig = {
     width: WIDTH,
     height: HEIGHT,
+    scaleFactor: 4,
+    debug: false
 }
 
 /** @constant {Array<Phaser.Scene>} Scenes - An array of scene classes used in the game */
@@ -71,7 +73,7 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true
+            debug: sharedConfig.debug,
         },
     },
     pixelArt: true,
