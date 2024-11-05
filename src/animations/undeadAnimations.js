@@ -21,4 +21,22 @@ export default anims => {
             repeat: 0
         });
     }
+
+    if (!anims.exists('undead-hurt')) {
+        anims.create({
+            key: 'undead-hurt',
+            frames: anims.generateFrameNumbers('undead', {start: 18, end: 19}),
+            frameRate: 5,
+            repeat: 0
+        });
+    }
+
+    if (!anims.exists('undead-die')) {
+        anims.create({
+            key: 'undead-die',
+            frames: anims.generateFrameNumbers('undead', {start: 24, end: 29}),
+            frameRate: 5,
+            repeat: 0
+        });
+    }
 };

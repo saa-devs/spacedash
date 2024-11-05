@@ -6,8 +6,9 @@
 import Phaser from 'phaser';
 import initAnimations from '../animations/survivorAnimations';
 import collidable from '../mixins/collidable';
+import animations from '../mixins/animations';
 import HealthBar from '../gamebar/HealthBar';
-import Shoot from '../attacks/Shoot'
+import Projectiles from '../attacks/Projectiles'
 
 class Survivor extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
@@ -23,6 +24,7 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
 
         // Mix in collision behavior from the collidable mixin
         Object.assign(this, collidable);
+        Object.assign(this, animations);
 
         // Initial setup
         this.init();
@@ -45,7 +47,11 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
         this.hasShotOnce = false;
         this.isCrouching = false;
         this.isJumping = false;
+        this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
+
         this.currentHealth = 6;
+
+        this.projectiles = new Projectiles(this.scene);
 
         // Setup wasd keys for movement
         this.keys = this.scene.input.keyboard.addKeys({
@@ -56,9 +62,11 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
         });
 
         this.scene.input.keyboard.on('keydown-ENTER', () => {
-            if (this.isJumping) {
+
+            if (this.body.velocity.x !== 0 || this.isJumping) {
                 return;
             }
+
             this.isShooting = true; // Set the shooting flag
 
             if (this.isCrouching) {
@@ -66,33 +74,31 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
                     this.play('crouch-quick-shoot', true).once('animationcomplete-shoot', () => {
                         this.setFrame(42); // Set to the last frame of the shoot animation
                     });
-                    const shoot = new Shoot(this.scene, this.x, this.y, 'beam');
-                    shoot.fire();
+                    this.projectiles.fireProjectile(this, this.isCrouching);
                     return;
                 }
+
                 this.play('crouch-shoot', true).once('animationcomplete-shoot', () => {
                     this.setFrame(42); // Set to the last frame of the shoot animation
                 });
-                const shoot = new Shoot(this.scene, this.x, this.y, 'beam');
-                shoot.fire();
+                this.projectiles.fireProjectile(this, this.isCrouching);
                 this.hasShotOnce = true;
-            }
 
-            if (this.hasShotOnce) {
-                this.play('shoot-short', true).once('animationcomplete-shoot', () => {
+            } else {
+                if (this.hasShotOnce) {
+                    this.play('shoot-short', true).once('animationcomplete-shoot', () => {
+                        this.setFrame(34); // Set to the last frame of the shoot animation
+                    });
+                    this.projectiles.fireProjectile(this, this.isCrouching);
+                    return;
+                }
+                // Play the shooting animation
+                this.play('shoot', true).once('animationcomplete-shoot', () => {
                     this.setFrame(34); // Set to the last frame of the shoot animation
                 });
-                const shoot = new Shoot(this.scene, this.x, this.y, 'beam');
-                shoot.fire();
-                return;
+                this.projectiles.fireProjectile(this, this.isCrouching);
+                this.hasShotOnce = true;
             }
-            // Play the shooting animation
-            this.play('shoot', true).once('animationcomplete-shoot', () => {
-                this.setFrame(34); // Set to the last frame of the shoot animation
-            });
-            const shoot = new Shoot(this.scene, this.x, this.y, 'beam');
-            shoot.fire();
-            this.hasShotOnce = true;
         });
 
         // Colliders, size and position
@@ -121,6 +127,7 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
 
         // Move left or right based on key input
         if (a.isDown) {
+            this.lastDirection = Phaser.Physics.Arcade.FACING_LEFT;
             this.isCrouching = false;
             this.isShooting = false; // Reset shooting state when moving
             this.isJumping = false;
@@ -128,6 +135,7 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
             this.setFlipX(true); // Face left
             this.play('walk', true); // Play walk animation
         } else if (d.isDown) {
+            this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
             this.isCrouching = false;
             this.isShooting = false; // Reset shooting state when moving
             this.isJumping = false;
@@ -152,7 +160,9 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
                 this.isJumping = true;
                 // If not crouching, perform the jump
                 this.setVelocityY(this.jumpVelocity);
-                this.play('jump', true);
+                this.play('jump', true).once('animationcomplete', () => {
+                    this.isJumping = false; // Reset isJumping when the animation is complete
+                });
             }
             return;
         }
@@ -164,6 +174,7 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
 
         if (Phaser.Input.Keyboard.JustDown(s) && onFloor) {
             this.isCrouching = true;
+            this.setVelocityX(0); // Stop moving
             this.play('crouch', true).once('animationcomplete', () => {
             });
             return;
@@ -172,6 +183,7 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
         if (s.isDown && onFloor) {
             if (!this.isCrouching) {
                 this.isCrouching = true; // Set crouching state
+                this.setVelocityX(0); // Stop moving
                 // Play the crouch animation once: frames 24 and 25
                 this.setFrame(25); // Stay on frame 25 after the animation completes
             }

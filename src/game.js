@@ -26,7 +26,7 @@ const sharedConfig = {
     width: WIDTH,
     height: HEIGHT,
     scaleFactor: 4,
-    debug: false
+    debug: true
 }
 
 /** @constant {Array<Phaser.Scene>} Scenes - An array of scene classes used in the game */

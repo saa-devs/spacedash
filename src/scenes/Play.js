@@ -168,7 +168,14 @@ class Play extends Phaser.Scene {
     }
 
     createEnemyColliders(enemies, {colliders}) {
-        enemies.addCollider(colliders.terrainLayer).addCollider(colliders.survivor, this.onSurvivorCollision.bind(this));
+        enemies
+            .addCollider(colliders.terrainLayer)
+            .addCollider(colliders.survivor, this.onSurvivorCollision.bind(this))
+            .addCollider(colliders.survivor.projectiles, this.onShoot);
+    }
+
+    onShoot(enemy, source) {
+        enemy.takeDamage(source);
     }
 
     onSurvivorCollision(enemy, survivor) {

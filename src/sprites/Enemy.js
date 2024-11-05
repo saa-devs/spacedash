@@ -5,6 +5,7 @@
 
 import Phaser from 'phaser';
 import collidable from '../mixins/collidable';
+import animations from '../mixins/animations';
 
 class Enemy extends Phaser.Physics.Arcade.Sprite {
     /**
@@ -24,6 +25,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         // Add collision properties and methods from the collidable mixin
         Object.assign(this, collidable);
+        Object.assign(this, animations);
 
         this.init();
         this.initEvents();
@@ -49,13 +51,15 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.turnDelay = 500;
 
         this.damage = 1;
+        this.health = 3;
 
         /**
          * @property {Phaser.GameObjects.Graphics} rayGraphics - Graphics object used for debugging raycasting.
          */
         this.rayGraphics = this.scene.add.graphics({
             lineStyle: {
-                width: 2, color: 0xaa00aa
+                width: 2,
+                color: 0xaa00aa
             }
         });
 
@@ -68,6 +72,22 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.setScale(4);
         this.setOffset(12, 5);
         this.setOrigin(0.5, 1);
+
+        /*
+        // Particle emitter setup for hit effect (Phaser 3.60+)
+        this.emitter = this.scene.add.particles(this.x, this.y, 'particle', {
+            speed: { min: 50, max: 150 }, // Adjust speed for a blocky effect
+            scale: { start: 1, end: 1 }, // Keep the scale constant for blocky particles
+            lifespan: 500, // Lifespan of the particles in milliseconds
+            gravityY: 300, // Add gravity to make particles fall
+            bounce: 1, // Add some bounce for a more blocky effect
+            quantity: 5, // Emit fewer particles for a blocky feel
+            blendMode: 'NORMAL' // Use normal blend mode for solid blocky particles
+        });
+
+        // Initially hide the emitter
+        this.emitter.setVisible(false);
+        */
     }
 
     /**
@@ -99,10 +119,13 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.currentWalkDistance += Math.abs(this.body.deltaX());
 
         const {ray, hasHit} = this.rayCast(this.body, this.terrainColliderLayer, {
-            rayLength: 90, precision: 1, steepness: 0.5
+            rayLength: 90,
+            precision: 1,
+            steepness: 0.5
         });
 
-        if ((!hasHit || this.currentWalkDistance >= this.maxWalkDistance) && (time - this.timeSinceLastTurn > this.turnDelay)) {
+        if ((!hasHit || this.currentWalkDistance >= this.maxWalkDistance)
+            && (time - this.timeSinceLastTurn > this.turnDelay)) {
             this.flipDirection();
             this.timeSinceLastTurn = time;
             this.currentWalkDistance = 0;
@@ -131,7 +154,12 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
      * Makes the enemy follow the survivor if within detection range.
      */
     followSurvivor() {
-        const distanceToPlayer = Phaser.Math.Distance.Between(this.x, this.y, this.survivor.x, this.survivor.y);
+        const distanceToPlayer = Phaser.Math.Distance.Between(
+            this.x,
+            this.y,
+            this.survivor.x,
+            this.survivor.y
+        );
 
         if (distanceToPlayer < this.detectionRange) {
             if (this.survivor.x < this.x) {
@@ -163,6 +191,26 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
      * */
     setTerrainColliders(terrainColliderLayer) {
         this.terrainColliderLayer = terrainColliderLayer;
+    }
+
+    takeDamage(source) {
+        source.deliverHit(this);
+        this.health -= source.damage;
+
+        if (this.health <= 0) {
+            this.body.setVelocity(0); // Stop any movement
+            this.body.setEnable(false); // Disable the physics body to stop interactions
+            this.setCollideWorldBounds(false); // Turn off world bounds collision
+            this.body.checkCollision.none = true;
+            this.rayGraphics.clear();
+            this.scene.events.removeListener(Phaser.Scenes.Events.UPDATE, this.update, this);
+        }
+
+        /*
+        this.emitter.setPosition(this.x, this.y);
+        this.emitter.setVisible(true);
+        this.emitter.explode(10); // Emit 10 particles from the enemy's position
+        */
     }
 }
 
