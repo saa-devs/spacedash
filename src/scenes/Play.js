@@ -1,6 +1,6 @@
 /**
  * @fileoverview Defines the Play scene for the Phaser game.
- * The Play scene handles creating the game world, player and enemies.
+ * The Play scene handles the game world, player and enemies.
  */
 
 import Survivor from '../sprites/Survivor';
@@ -24,8 +24,7 @@ class Play extends Phaser.Scene {
     }
 
     /**
-     * Called when the scene is created. Sets up the map, player, enemies, and interactions.
-     */
+     * Called when the scene is created. Sets up the map, player, enemies, and interactions. */
     create() {
         // Create map and layers
         const map = this.createMap().map;
@@ -33,10 +32,8 @@ class Play extends Phaser.Scene {
         const layers = this.createLayers(map, tileset);
         const levelBounds = this.getPlayerBounds(layers.levelBoundsLayer); // Start and end zones of the sprites
 
-        this.scaleFactor = 4; // How much to scale up the map by
-
         // Get the layer height and multiply by scaleFactor to get the visually rendered height
-        const scaledLayerHeight = layers.terrainLayer.height * this.scaleFactor;
+        const scaledLayerHeight = layers.terrainLayer.height * this.config.scaleFactor;
 
         const offsetX = 0; // Horizontal offset - move map to the left edge of the game-container
         const offsetY = (this.scale.height - scaledLayerHeight) / 2; // Vertical offset - center the map vertically
@@ -62,7 +59,7 @@ class Play extends Phaser.Scene {
         // Scale up all layers and sprites to be 4 times their size
         const layerNames = ['backgroundLayer', 'terrainLayer', 'foregroundLayer', 'decorationLayer'];
         layerNames.forEach(layerName => {
-            layers[layerName].setScale(this.scaleFactor);
+            layers[layerName].setScale(this.config.scaleFactor);
         });
 
         // Set position of all layers
@@ -132,10 +129,11 @@ class Play extends Phaser.Scene {
      * @param {object} start - The starting position for the player.
      * @param {number} offsetX - The horizontal offset for positioning.
      * @param {number} offsetY - The vertical offset for positioning.
-     * */
+     * @returns {Survivor} The survivor character instance.
+     */
     createPlayer(layers, start, offsetX, offsetY) {
-        const startX = start.x * this.scaleFactor;
-        const startY = start.y * this.scaleFactor + offsetY;
+        const startX = start.x * this.config.scaleFactor;
+        const startY = start.y * this.config.scaleFactor + offsetY;
         return new Survivor(this, startX, startY);
     }
 
@@ -154,8 +152,8 @@ class Play extends Phaser.Scene {
         const enemyTypes = enemies.getTypes();
 
         enemySpawnsLayer.objects.forEach((spawnPoint) => {
-            const startX = spawnPoint.x * this.scaleFactor;
-            const startY = spawnPoint.y * this.scaleFactor + offsetY;
+            const startX = spawnPoint.x * this.config.scaleFactor;
+            const startY = spawnPoint.y * this.config.scaleFactor + offsetY;
             const enemy = new enemyTypes[spawnPoint.type](this, startX, startY, survivor);
             enemy.setTerrainColliders(terrainLayer);
             enemies.add(enemy);
@@ -163,23 +161,45 @@ class Play extends Phaser.Scene {
         return enemies;
     }
 
+    /**
+     * Sets up colliders for the player with specified layers.
+     * @param survivor - The player character.
+     * @param colliders - An object containing layers to collide with.
+     */
     createPlayerColliders(survivor, {colliders}) {
         survivor.addCollider(colliders.terrainLayer);
     }
 
+    /**
+     * Sets up colliders for the enemies with specified layers and objects.
+     * @param enemies - The group of enemies.
+     * @param colliders - An object containing layers and objects to collide with.
+     */
     createEnemyColliders(enemies, {colliders}) {
         enemies
             .addCollider(colliders.terrainLayer)
-            .addCollider(colliders.survivor, this.onSurvivorCollision.bind(this))
-            .addCollider(colliders.survivor.projectiles, this.onShoot);
+            .addCollider(colliders.survivor, this.onSurvivorCollision.bind(this)) /* Play this.onSurvivorCollision whenever there is
+            collision between the enemy and survivor */
+            .addCollider(colliders.survivor.projectiles, this.onShoot); /* Play onShoot() callback function when collision happens
+            between survivors weapon and the enemy */
     }
 
-    onShoot(enemy, source) {
-        enemy.takeDamage(source);
-    }
-
+    /**
+     * Callback function for when an enemy collides with the survivor.
+     * @param {Phaser.GameObjects.Sprite} enemy - The enemy that collided with the survivor.
+     * @param {Survivor} survivor - The player character.
+     */
     onSurvivorCollision(enemy, survivor) {
         survivor.handleHit(enemy);
+    }
+
+    /**
+     * Callback function to run when a projectile hits an enemy.
+     * @param enemy - The enemy that was hit.
+     * @param source - The source of the projectile.
+     */
+    onShoot(enemy, source) {
+        enemy.takeDamage(source);
     }
 
     /**
@@ -191,8 +211,8 @@ class Play extends Phaser.Scene {
         const {height} = this.config;
 
         // Calculate the scaled layer dimensions based on the original map size and scale factor */
-        const scaledLayerWidth = layers.terrainLayer.width * this.scaleFactor;
-        const scaledLayerHeight = layers.terrainLayer.height * this.scaleFactor;
+        const scaledLayerWidth = layers.terrainLayer.width * this.config.scaleFactor;
+        const scaledLayerHeight = layers.terrainLayer.height * this.config.scaleFactor;
 
         // Set world bounds and camera bounds to match the scaled map dimensions */
         this.physics.world.setBounds(0, 0, scaledLayerWidth, scaledLayerHeight);
@@ -212,8 +232,8 @@ class Play extends Phaser.Scene {
      * @param {number} offsetY - The vertical offset for positioning.
      */
     createEndOfLevel(survivor, end, offsetX, offsetY) {
-        const endX = end.x * this.scaleFactor;
-        const endY = end.y * this.scaleFactor + offsetY;
+        const endX = end.x * this.config.scaleFactor;
+        const endY = end.y * this.config.scaleFactor + offsetY;
 
         // Create a sprite to represent end of level in map
         const endOfLevel = this.physics.add.sprite(endX, endY, 'end')

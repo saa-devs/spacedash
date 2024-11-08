@@ -7,21 +7,25 @@ import Phaser from 'phaser';
 import {ENEMY_TYPES} from '../spriteTypes/enemyTypes';
 import collidable from '../mixins/collidable';
 
+/**
+ * @class Enemies
+ * @extends {Phaser.GameObjects.Group}
+ * @classdesc A group class for managing multiple enemy objects in the game. Provides methods for handling
+ * enemy types and incorporates collision handling from the `collidable` mixin.
+ */
 class Enemies extends Phaser.GameObjects.Group {
     /**
-     * @constructor
+     * Creates an instance of the Enemies group and applies collision behavior.
      * @param {Phaser.Scene} scene - The scene this group of enemies belongs to.
      */
     constructor(scene) {
         super(scene);
-        /**
-         * Adds collision properties and methods from the collidable mixin.
-         */
+        // Adds collision properties and methods from the collidable mixin
         Object.assign(this, collidable);
     }
 
     /**
-     * Returns the different types of enemies available.
+     * Retrieves the different types of enemies available in the game.
      * @returns {Array|Object} - The list or object of enemy types.
      */
     getTypes() {
