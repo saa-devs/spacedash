@@ -8,20 +8,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b9651be2-136e-4a86-9eef-e7920a38b8aa" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/animations/blueCoinAnimation.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/groups/Collectables.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sprites/Collectable.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/animations/survivorAnimations.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/animations/survivorAnimations.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/animations/undeadAnimations.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/animations/undeadAnimations.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/attacks/Projectiles.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/attacks/Projectiles.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/attacks/Shoot.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/attacks/Shoot.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gamebar/HealthBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/gamebar/HealthBar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/groups/Enemies.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/groups/Enemies.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mixins/animations.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/mixins/animations.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mixins/collidable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/mixins/collidable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game-assets/tileset/spacetileset.json" beforeDir="false" afterPath="$PROJECT_DIR$/game-assets/tileset/spacetileset.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/Init.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/Init.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/scenes/Play.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/Play.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sprites/Enemy.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sprites/Enemy.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sprites/Survivor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sprites/Survivor.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sprites/Undead.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sprites/Undead.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,11 +115,23 @@
       <workItem from="1730621324813" duration="16602000" />
       <workItem from="1730696336923" duration="37198000" />
       <workItem from="1730872670772" duration="1442000" />
-      <workItem from="1731019817152" duration="8302000" />
+      <workItem from="1731019817152" duration="17500000" />
+      <workItem from="1731082337606" duration="1088000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
