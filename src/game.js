@@ -6,34 +6,36 @@ import Phaser from 'phaser';
 import Play from './scenes/Play';
 import Init from './scenes/Init';
 
-/** @constant {number} WIDTH - The width of the game screen in pixels */
+/** @constant {number} WIDTH - The width of the game screen in pixels. */
 const WIDTH = 1000;
 
-/** @constant {number} HEIGHT - The height of the game screen in pixels */
+/** @constant {number} HEIGHT - The height of the game screen in pixels. */
 const HEIGHT = 700;
 
 /**
  * @typedef {Object} SharedConfig
- * @property {number} width - The width of the game screen
- * @property {number} height - The height of the game screen
+ * @property {number} width - The width of the game screen in pixels.
+ * @property {number} height - The height of the game screen in pixels.
+ * @property {number} scaleFactor - The scale factor for the game.
+ * @property {boolean} debug - Whether to enable debugging.
  */
 
 /**
  * @type {SharedConfig}
- * @description Shared configurations used across different game scenes
+ * @description Shared configurations used across different game scenes.
  */
 const sharedConfig = {
     width: WIDTH,
     height: HEIGHT,
     scaleFactor: 4,
-    debug: true
+    debug: false
 }
 
-/** @constant {Array<Phaser.Scene>} Scenes - An array of scene classes used in the game */
+/** @constant {Array<Phaser.Scene>} Scenes - An array of scene classes used in the game. */
 const Scenes = [Init, Play];
 
 /**
- * Creates a new instance of a scene and passes shared configurations to it
+ * Creates a new instance of a scene and passes shared configurations to it.
  * @function
  * @param {Function} Scene - The scene class to initialise
  * @returns {Phaser.Scene} - An instance of the scene
@@ -41,9 +43,9 @@ const Scenes = [Init, Play];
 const createScene = Scene => new Scene(sharedConfig);
 
 /**
- * Iterates over every scene from array of scenes and initialises them
+ * Iterates over every scene from array of scenes and initialises them.
  * @function
- * @returns {Array<Phaser.Scene>} - An array of initialised scene instances
+ * @returns {Array<Phaser.Scene>} - An array of initialised scene instances.
  */
 const initScenes = () => Scenes.map(createScene);
 
@@ -62,7 +64,7 @@ const initScenes = () => Scenes.map(createScene);
 
 /**
  * @type {GameConfig}
- * @description The main configuration object for the Phaser game
+ * @description The main configuration object for the Phaser game.
  */
 const config = {
     type: Phaser.WEBGL,
@@ -81,7 +83,7 @@ const config = {
 };
 
 /**
- * Initialises and starts the Phaser game with the specified configuration
+ * Initialises and starts the Phaser game with the specified configuration.
  * @function
  */
 export function loadGame() {
