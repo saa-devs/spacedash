@@ -4,6 +4,7 @@
  */
 
 import Survivor from '../sprites/Survivor';
+import Collectables from '../groups/Collectables'
 import Enemies from '../groups/Enemies';
 
 /**
@@ -20,20 +21,23 @@ class Play extends Phaser.Scene {
     constructor(config) {
         super('play');
         this.config = config;
+        this.scaleFactor = this.config.scaleFactor;
         this.survivor = null;
     }
 
     /**
-     * Called when the scene is created. Sets up the map, player, enemies, and interactions. */
+     * Called when the scene is created. Sets up the map, player, enemies, collectables, and interactions. */
     create() {
         // Create map and layers
         const map = this.createMap().map;
+
         const tileset = this.createMap().tileset;
         const layers = this.createLayers(map, tileset);
         const levelBounds = this.getPlayerBounds(layers.levelBoundsLayer); // Start and end zones of the sprites
+        const collectables = this.createCollectables(layers.collectableLayer);
 
         // Get the layer height and multiply by scaleFactor to get the visually rendered height
-        const scaledLayerHeight = layers.terrainLayer.height * this.config.scaleFactor;
+        const scaledLayerHeight = layers.terrainLayer.height * this.scaleFactor;
 
         const offsetX = 0; // Horizontal offset - move map to the left edge of the game-container
         const offsetY = (this.scale.height - scaledLayerHeight) / 2; // Vertical offset - center the map vertically
@@ -42,12 +46,13 @@ class Play extends Phaser.Scene {
         const survivor = this.createPlayer(layers, levelBounds.start, offsetX, offsetY);
         const enemies = this.createEnemies(layers.enemySpawnsLayer, offsetX, offsetY, layers.terrainLayer, survivor);
 
-        // Enable player collision with terrain layer
         this.createPlayerColliders(survivor, {
             colliders: {
-                terrainLayer: layers.terrainLayer
+                terrainLayer: layers.terrainLayer,
             }
         });
+
+        this.createPlayerOverlap(survivor, collectables); // Set up overlap with collectables
 
         // Enable enemy collision with terrain layer and the player
         this.createEnemyColliders(enemies, {
@@ -59,7 +64,7 @@ class Play extends Phaser.Scene {
         // Scale up all layers and sprites to be 4 times their size
         const layerNames = ['backgroundLayer', 'terrainLayer', 'foregroundLayer', 'decorationLayer'];
         layerNames.forEach(layerName => {
-            layers[layerName].setScale(this.config.scaleFactor);
+            layers[layerName].setScale(this.scaleFactor);
         });
 
         // Set position of all layers
@@ -91,6 +96,28 @@ class Play extends Phaser.Scene {
     }
 
     /**
+     * Creates and positions collectable items based on the specified layer.
+     *
+     * This function initialises a new `Collectables` group, iterates through each object in the `collectablesLayer`,
+     * and positions each collectable item at the scaled coordinates within the game world.
+     *
+     * @function createCollectables
+     * @param {Phaser.Tilemaps.ObjectLayer} collectablesLayer - The layer containing collectable object data from the tilemap.
+     * @returns {Collectables} The created `Collectables` group with all items positioned as defined in the layer.
+     */
+    createCollectables(collectablesLayer) {
+        const collectables = new Collectables(this);
+
+        collectablesLayer.objects.forEach((collectableObject) => {
+            const startX = collectableObject.x * this.scaleFactor;
+            const startY = collectableObject.y * this.scaleFactor;
+            collectables.get(startX, startY, 'blue-coin');
+        });
+
+        return collectables;
+    }
+
+    /**
      * Creates all layers for the game map.
      * @param {object} map - The tilemap object.
      * @param {object} tileset - The tileset object.
@@ -103,11 +130,20 @@ class Play extends Phaser.Scene {
         const decorationLayer = map.createLayer('decoration', tileset, 0, 0);
         const levelBoundsLayer = map.getObjectLayer('levelbounds');
         const enemySpawnsLayer = map.getObjectLayer('enemyspawns');
+        const collectableLayer = map.getObjectLayer('collectables');
 
         // Enable collision detection for all tiles in the terrainLayer, except for tiles with the index -1.
         // The index -1 represents empty tiles or tiles that don't exist
         terrainLayer.setCollisionByExclusion([-1]);
-        return {backgroundLayer, foregroundLayer, terrainLayer, decorationLayer, levelBoundsLayer, enemySpawnsLayer};
+        return {
+            backgroundLayer,
+            foregroundLayer,
+            terrainLayer,
+            decorationLayer,
+            levelBoundsLayer,
+            enemySpawnsLayer,
+            collectableLayer
+        };
     }
 
     /**
@@ -132,8 +168,8 @@ class Play extends Phaser.Scene {
      * @returns {Survivor} The survivor character instance.
      */
     createPlayer(layers, start, offsetX, offsetY) {
-        const startX = start.x * this.config.scaleFactor;
-        const startY = start.y * this.config.scaleFactor + offsetY;
+        const startX = start.x * this.scaleFactor;
+        const startY = start.y * this.scaleFactor + offsetY;
         return new Survivor(this, startX, startY);
     }
 
@@ -152,8 +188,8 @@ class Play extends Phaser.Scene {
         const enemyTypes = enemies.getTypes();
 
         enemySpawnsLayer.objects.forEach((spawnPoint) => {
-            const startX = spawnPoint.x * this.config.scaleFactor;
-            const startY = spawnPoint.y * this.config.scaleFactor + offsetY;
+            const startX = spawnPoint.x * this.scaleFactor;
+            const startY = spawnPoint.y * this.scaleFactor + offsetY;
             const enemy = new enemyTypes[spawnPoint.type](this, startX, startY, survivor);
             enemy.setTerrainColliders(terrainLayer);
             enemies.add(enemy);
@@ -161,13 +197,22 @@ class Play extends Phaser.Scene {
         return enemies;
     }
 
-    /**
-     * Sets up colliders for the player with specified layers.
-     * @param survivor - The player character.
-     * @param colliders - An object containing layers to collide with.
-     */
     createPlayerColliders(survivor, {colliders}) {
         survivor.addCollider(colliders.terrainLayer);
+    }
+
+    createPlayerOverlap(survivor, collectables) {
+        this.physics.add.overlap(survivor, collectables, this.onCollect, null, this);
+    }
+
+    /**
+     * Callback function for when the survivor collects an item.
+     * @param survivor - The player character.
+     * @param collectable - The collected item.
+     */
+    onCollect(survivor, collectable) {
+        collectable.disableBody(true, true);
+        console.log("Item collected!");
     }
 
     /**
@@ -211,8 +256,8 @@ class Play extends Phaser.Scene {
         const {height} = this.config;
 
         // Calculate the scaled layer dimensions based on the original map size and scale factor */
-        const scaledLayerWidth = layers.terrainLayer.width * this.config.scaleFactor;
-        const scaledLayerHeight = layers.terrainLayer.height * this.config.scaleFactor;
+        const scaledLayerWidth = layers.terrainLayer.width * this.scaleFactor;
+        const scaledLayerHeight = layers.terrainLayer.height * this.scaleFactor;
 
         // Set world bounds and camera bounds to match the scaled map dimensions */
         this.physics.world.setBounds(0, 0, scaledLayerWidth, scaledLayerHeight);
@@ -232,8 +277,8 @@ class Play extends Phaser.Scene {
      * @param {number} offsetY - The vertical offset for positioning.
      */
     createEndOfLevel(survivor, end, offsetX, offsetY) {
-        const endX = end.x * this.config.scaleFactor;
-        const endY = end.y * this.config.scaleFactor + offsetY;
+        const endX = end.x * this.scaleFactor;
+        const endY = end.y * this.scaleFactor + offsetY;
 
         // Create a sprite to represent end of level in map
         const endOfLevel = this.physics.add.sprite(endX, endY, 'end')

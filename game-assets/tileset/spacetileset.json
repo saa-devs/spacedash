@@ -179,9 +179,56 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"collectables",
+         "objects":[
+                {
+                 "height":0,
+                 "id":21,
+                 "name":"collectable",
+                 "point":true,
+                 "rotation":0,
+                 "type":"BlueCoin",
+                 "visible":true,
+                 "width":0,
+                 "x":87.6803292104094,
+                 "y":145.540478181929
+                }, 
+                {
+                 "height":0,
+                 "id":22,
+                 "name":"collectable",
+                 "point":true,
+                 "rotation":0,
+                 "type":"BlueCoin",
+                 "visible":true,
+                 "width":0,
+                 "x":98.921407021652,
+                 "y":145.540478181929
+                }, 
+                {
+                 "height":0,
+                 "id":23,
+                 "name":"collectable",
+                 "point":true,
+                 "rotation":0,
+                 "type":"BlueCoin",
+                 "visible":true,
+                 "width":0,
+                 "x":108.957422432135,
+                 "y":145.540478181929
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":7,
- "nextobjectid":12,
+ "nextlayerid":8,
+ "nextobjectid":24,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.0",
