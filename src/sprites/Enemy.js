@@ -15,7 +15,7 @@ import animations from '../mixins/animations';
  */
 class Enemy extends Phaser.Physics.Arcade.Sprite {
     /**
-     * Constructs the Enemy instance and initializes properties.
+     * Constructs the Enemy instance and initialises properties.
      * @param {Phaser.Scene} scene - The scene to which this enemy belongs.
      * @param {number} x - The x-coordinate of the enemy's starting position.
      * @param {number} y - The y-coordinate of the enemy's starting position.
@@ -40,12 +40,12 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     /**
-     * Initializes the enemy's properties such as gravity, speed, size, and collision settings.
+     * Initialises the enemy's properties such as gravity, speed, size, and collision settings.
      */
     init() {
         // Set up enemy physics properties
         this.gravity = 450;
-        this.speed = 20;
+        this.speed = 30;
         this.followSpeed = 40;
         this.setVelocityX(this.speed);
         this.body.setGravityY(this.gravity);
@@ -56,6 +56,14 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.maxWalkDistance = 200;
         this.currentWalkDistance = 0;
         this.turnDelay = 500;
+
+        // Configure collision bounds, scale, and origin for the enemy sprite
+        this.setCollideWorldBounds(true);
+        this.setImmovable(true);
+        this.body.setSize(8, 26);      // Set size to match character's collision needs
+        this.body.setOffset(12, 6);   // Adjust this offset as needed, especially after re-adding scale
+        this.setOrigin(0.5, 1);        // Align sprite’s bottom to the ground level
+        this.setScale(4)
 
         // Damage and health properties
         this.damage = 1;
@@ -73,30 +81,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         this.terrainColliderLayer = null; // Layer used for terrain collision checks
         this.survivor = null; // Player reference for enemy to follow
-
-        // Configure collision bounds, scale, and origin for the enemy sprite
-        this.setCollideWorldBounds(true);
-        this.setImmovable(true);
-        this.setSize(8, 27);
-        this.setScale(4);
-        this.setOffset(12, 5);
-        this.setOrigin(0.5, 1);
-
-        /*
-        // Particle emitter setup for hit effect (Phaser 3.60+)
-        this.emitter = this.scene.add.particles(this.x, this.y, 'particle', {
-            speed: { min: 50, max: 150 }, // Adjust speed for a blocky effect
-            scale: { start: 1, end: 1 }, // Keep the scale constant for blocky particles
-            lifespan: 500, // Lifespan of the particles in milliseconds
-            gravityY: 300, // Add gravity to make particles fall
-            bounce: 1, // Add some bounce for a more blocky effect
-            quantity: 5, // Emit fewer particles for a blocky feel
-            blendMode: 'NORMAL' // Use normal blend mode for solid blocky particles
-        });
-
-        // Initially hide the emitter
-        this.emitter.setVisible(false);
-        */
     }
 
     /** Sets up event listeners for the enemy, particularly for the scene's update event. */
@@ -106,7 +90,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     /**
      * Called every frame to update the enemy's behavior.
-     *
      * @param {number} time - The current time in the game loop.
      */
     update(time) {
@@ -115,7 +98,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     /**
      * Handles the enemy's walking behavior, turning at platform edges, and following the player if in range.
-     *
      * @param {number} time - The current time in the game loop.
      */
     enemyWalk(time) {
@@ -188,7 +170,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     /**
      * Sets the survivor (player) for the enemy to follow.
-     *
      * @param {Phaser.GameObjects.Sprite} survivor - The player character.
      */
     setSurvivor(survivor) {
@@ -197,7 +178,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     /**
      * Sets the terrain collider layer used for raycasting and collision detection.
-     *
      * @param {object} terrainColliderLayer - The terrain layer for setting collision.
      */
     setTerrainColliders(terrainColliderLayer) {
@@ -221,12 +201,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
             this.rayGraphics.clear(); // Clear debugging ray graphics
             this.scene.events.removeListener(Phaser.Scenes.Events.UPDATE, this.update, this);
         }
-
-        /*
-        this.emitter.setPosition(this.x, this.y);
-        this.emitter.setVisible(true);
-        this.emitter.explode(10); // Emit 10 particles from the enemy's position
-        */
     }
 }
 

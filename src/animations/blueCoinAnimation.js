@@ -7,11 +7,14 @@
  * @function
  * @param {Phaser.Animations.AnimationManager} anims - The animation manager used to create and manage animations.
  */
+
 export default anims => {
-    anims.create({
-        key: 'spin',
-        frames: anims.generateFrameNumbers('blue-coin', { start: 0, end: 6 }),
-        frameRate: 15,
-        repeat: -1
-    });
+    if (!anims.exists('spin')) {
+        anims.create({
+            key: 'spin',
+            frames: anims.generateFrameNumbers('blue-coin', { start: 0, end: 6 }),
+            frameRate: 15,
+            repeat: -1
+        });
+    }
 };

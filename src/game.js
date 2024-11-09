@@ -27,7 +27,7 @@ const HEIGHT = 700;
 const sharedConfig = {
     width: WIDTH,
     height: HEIGHT,
-    scaleFactor: 4,
+    scaleFactor: 3.5,
     debug: false
 }
 

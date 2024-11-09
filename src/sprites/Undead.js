@@ -5,7 +5,6 @@
 
 import Enemy from './Enemy';
 import initAnimations from "../animations/undeadAnimations";
-import Phaser from "phaser";
 
 /**
  * @class Undead
@@ -26,6 +25,7 @@ class Undead extends Enemy {
         scene.add.existing(this); // Add the undead enemy sprite to the scene
         scene.physics.add.existing(this); // Enable physics for the undead enemy
         initAnimations(this.scene.anims); // Initialise animations specific to the Undead type
+        this.setPipeline('Light2D');
 
         this.isDead = false; // Track if the enemy is dead
     }

@@ -22,6 +22,41 @@ class Collectables extends Phaser.Physics.Arcade.StaticGroup {
             classType: Collectable
         });
     }
+
+    /**
+     * Maps properties from a properties list to an object.
+     *
+     * @param {Array<Object>} propertiesList - List of properties, each with `name` and `value` keys.
+     * @returns {Object} Mapped properties as key-value pairs, or an empty object if propertiesList is invalid.
+     */
+    mapProperties(propertiesList) {
+        if (!Array.isArray(propertiesList) || propertiesList.length === 0) {
+            return {};
+        }
+        return propertiesList.reduce((map, object) => {
+            map[object.name] = object.value;
+            return map;
+        }, {});
+    }
+
+    /**
+     * Adds collectable items to the group based on the data from a tilemap layer.
+     *
+     * @param collectablesLayer - The layer containing collectable object data.
+     * @param {number} scaleFactor - Scaling factor for positioning items within the layer.
+     */
+    addFromLayer(collectablesLayer, scaleFactor) {
+        const {score: defaultScore, type} = this.mapProperties(collectablesLayer.properties);
+
+        collectablesLayer.objects.forEach((collectableObject) => {
+            const offsetY = 40;
+            const startX = collectableObject.x * scaleFactor;
+            const startY = collectableObject.y * scaleFactor + offsetY;
+            const collectable = this.get(startX, startY, type);
+            const properties = this.mapProperties(collectableObject.properties);
+            collectable.score = properties.score || defaultScore;
+        });
+    }
 }
 
 export default Collectables;

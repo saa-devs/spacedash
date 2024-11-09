@@ -1,7 +1,7 @@
 /**
  * profileController.js
  *
- * This file handles the initialisation and setup of the profile UI, including character
+ * This file handles the initialisation and setup of the profile ScoreBoard, including character
  * selection and action buttons for playing the game, viewing stats/leaderboard, and logging out.
  */
 
@@ -20,7 +20,7 @@ const {
 const gameDiv = document.getElementById('game-div');
 
 /**
- * Initialises and displays the profile UI, including character selection and action buttons.
+ * Initialises and displays the profile ScoreBoard, including character selection and action buttons.
  *
  * @async
  * @function loadProfile
@@ -64,7 +64,7 @@ async function storeCharacterURLs() {
 }
 
 /**
- * Inserts character selection options with images into the profile UI, using URLs from local storage.
+ * Inserts character selection options with images into the profile ScoreBoard, using URLs from local storage.
  * Adds event listeners to each character selection option.
  *
  * @function insertCharacterLabels
@@ -94,7 +94,7 @@ function insertCharacterLabels() {
 }
 
 /**
- * Sets up the play button with an event listener that hides the profile UI and starts the game.
+ * Sets up the play button with an event listener that hides the profile ScoreBoard and starts the game.
  *
  * @function playButtonSetup
  * @returns {void}

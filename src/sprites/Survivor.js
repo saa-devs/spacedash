@@ -45,17 +45,17 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
         this.playerSpeed = 225;
         this.body.setGravityY(this.gravity);
 
+        this.projectiles = new Projectiles(this.scene); // Set up projectiles for shooting from survivor
+
+        this.currentHealth = 6; // Character's health
+        this.healthBar = new HealthBar(this.scene, 70, 121); // Initialise health bar
+
         // Character behavior flags
         this.hasBeenHit = null;
         this.isShooting = false;
         this.hasShotOnce = false;
         this.isCrouching = false;
-        this.isJumping = false;
         this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
-
-        this.currentHealth = 6; // Character's health
-
-        this.projectiles = new Projectiles(this.scene); // Set up projectiles for shooting
 
         // Define WASD keys for character control
         this.keys = this.scene.input.keyboard.addKeys({
@@ -65,18 +65,23 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
             s: Phaser.Input.Keyboard.KeyCodes.S
         });
 
+        // Add lighting to survivor
+        this.light = this.scene.lights.addLight(this.x, this.y, 300)
+            .setColor(0xd9fffb)
+            .setIntensity(0.7);
+
         // Set up shooting with the Enter key
         this.scene.input.keyboard.on('keydown-ENTER', () => {
             // Only shoot if survivor is not moving or jumping
-            if (this.body.velocity.x !== 0 || this.isJumping) {
+            if (!this.body.onFloor() || this.body.velocity.x !== 0) {
                 return;
             }
 
             this.isShooting = true; // Set the shooting flag
 
-            // Play different shooting animations based on crouching and previous shots
-            if (this.isCrouching) { // Animation if character is crouching
-                if (this.hasShotOnce) { // Animation if the character has only shot once
+            // Play different shooting animations if survivor is crouching
+            if (this.isCrouching) {
+                if (this.hasShotOnce) { // Play different animation if survivor has already shot once
                     this.play('crouch-quick-shoot', true).once('animationcomplete-shoot', () => {
                         this.setFrame(42); // Set to the last frame of the shoot animation
                     });
@@ -85,7 +90,7 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
                 }
 
                 this.play('crouch-shoot', true).once('animationcomplete-shoot', () => {
-                    this.setFrame(42); // Set to the last frame of the shoot animation
+                    this.setFrame(42);
                 });
                 this.projectiles.fireProjectile(this, this.isCrouching);
                 this.hasShotOnce = true;
@@ -93,29 +98,25 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
             } else {
                 if (this.hasShotOnce) {
                     this.play('shoot-short', true).once('animationcomplete-shoot', () => {
-                        this.setFrame(34); // Set to the last frame of the shoot animation
+                        this.setFrame(34);
                     });
                     this.projectiles.fireProjectile(this, this.isCrouching);
                     return;
                 }
-                // Play the shooting animation
                 this.play('shoot', true).once('animationcomplete-shoot', () => {
-                    this.setFrame(34); // Set to the last frame of the shoot animation
+                    this.setFrame(34);
                 });
                 this.projectiles.fireProjectile(this, this.isCrouching);
                 this.hasShotOnce = true;
             }
         });
 
-        // Set up collider bounds, scale, and position adjustments
-        this.setCollideWorldBounds(true);
-        this.setScale(4);
-        this.setSize(8, 27);
-        this.setOffset(13, 5);
-        this.setOrigin(0.5, 1);
+        this.body.setSize(8, 26);      // Set size to match character's collision needs
+        this.body.setOffset(12, 6);   // Adjust this offset as needed, especially after re-adding scale
+        this.setOrigin(0.5, 1);        // Align sprite’s bottom to the ground level
+        this.setScale(4)
 
         initAnimations(this.scene.anims); // Initialise survivor sprite animations
-        this.healthBar = new HealthBar(this.scene, 60, 100); // Initialise health bar
     }
 
     /** Sets up event listeners for the scene's update event. */
@@ -132,20 +133,21 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
         const {a, d, w, s} = this.keys;
         const onFloor = this.body.onFloor();
 
+        const lightOffset = this.lastDirection === Phaser.Physics.Arcade.FACING_RIGHT ? 100 : -100;
+        this.light.setPosition(this.x + lightOffset, this.y - 80);
+
         // Move left or right with A and D keys
         if (a.isDown) {
             this.lastDirection = Phaser.Physics.Arcade.FACING_LEFT;
             this.isCrouching = false;
-            this.isShooting = false; // Reset shooting flag when moving
-            this.isJumping = false;
+            this.isShooting = false;
             this.setVelocityX(-this.playerSpeed);
             this.setFlipX(true); // Move left
             this.play('walk', true);
         } else if (d.isDown) {
             this.lastDirection = Phaser.Physics.Arcade.FACING_RIGHT;
             this.isCrouching = false;
-            this.isShooting = false; // Reset shooting flag
-            this.isJumping = false;
+            this.isShooting = false;
             this.setVelocityX(this.playerSpeed);
             this.setFlipX(false); // Moe right
             this.play('walk', true);
@@ -154,7 +156,7 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
         }
 
         // Jump with W key if on the ground
-        if (Phaser.Input.Keyboard.JustDown(w) && onFloor) {
+        if ((Phaser.Input.Keyboard.JustDown(w)) && onFloor) {
             if (this.isCrouching) {
                 // If the player is crouching, go to idle instead of jumping
                 this.isCrouching = false; // Reset crouching state
@@ -165,11 +167,9 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
                     });
                 }
             } else {
-                this.isJumping = true;
                 // If not crouching, perform the jump
                 this.setVelocityY(this.jumpVelocity); // Set vertical velocity for jump
                 this.play('jump', true).once('animationcomplete', () => {
-                    this.isJumping = false; // Reset isJumping when the animation is complete
                 });
             }
             return;

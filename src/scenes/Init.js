@@ -6,9 +6,10 @@
 
 import survivor from '../../game-assets/sprites/survivor.png';
 import undead from '../../game-assets/sprites/undead.png';
-import particles from '../../game-assets/effects/particle.png';
 import hp from '../../game-assets/ui/hp.png';
 import beam from '../../game-assets/effects/beam.png';
+import beamHit from '../../game-assets/effects/beamhit.png';
+import particle from '../../game-assets/effects/particle.png';
 import bluecoin from '../../game-assets/collectables/blue-coin.png'
 
 import tilemapJSON from '../../game-assets/tileset/spacetileset.json';
@@ -36,7 +37,8 @@ class Init extends Phaser.Scene {
         // Load the tilemap JSON file and the corresponding tileset image
         this.load.tilemapTiledJSON('tilemap', tilemapJSON);
         this.load.image('tileset', tilesetImage);
-        this.load.image('particle', particles);
+        this.load.image('particle', particle);
+        this.load.image('beam-hit', beamHit);
         this.load.image('beam', beam);
 
         // Load the survivor spritesheet
@@ -49,10 +51,12 @@ class Init extends Phaser.Scene {
             frameWidth: 32, frameHeight: 32
         });
 
+        // Load the health bar spritesheet
         this.load.spritesheet('hp', hp, {
             frameWidth: 8, frameHeight: 8
         });
 
+        // Load the blue coin spritesheet
         this.load.spritesheet('blue-coin', bluecoin, {
             frameWidth: 16, frameHeight: 10
         });
