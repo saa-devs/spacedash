@@ -14,10 +14,9 @@ class HealthBar {
         this.scene = scene;
         this.x = x;
         this.y = y;
-        this.currentHealth = 6; // Start with full health (3 full circles)
 
-        // Array to store the health icons
-        this.healthIcons = [];
+        this.currentHealth = 6; // Start with full health (3 full circles)
+        this.healthIcons = []; // Array to store the health icons
 
         // Create and display the initial full health icons
         this.createHealthIcons();
@@ -30,7 +29,7 @@ class HealthBar {
     createHealthIcons() {
         for (let i = 0; i < 3; i++) { // We have 3 circles to represent the health
             const icon = this.scene.add.sprite(this.x + (i * 32), this.y, 'hp'); // Position each icon 32px apart
-            icon.setScale(4); // Scale up the icons by 4 for visibility
+            icon.setScale(3.5); // Scale up the icons by 4 for visibility
             icon.setFrame(0); // Start with frame 0 (full circle)
             icon.setScrollFactor(0); // Fix the icons relative to the camera
             this.healthIcons.push(icon); // Store the icon in the array

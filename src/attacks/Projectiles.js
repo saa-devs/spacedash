@@ -28,6 +28,7 @@ class Projectiles extends Phaser.Physics.Arcade.Group {
             key: 'beam', // Key for the projectile texture
             classType: Shoot // Class type for each projectile instance
         });
+        this.timeFromLastShoot = null;
     }
 
     /**
@@ -41,8 +42,16 @@ class Projectiles extends Phaser.Physics.Arcade.Group {
         const projectile = this.getFirstDead(false); // Get an inactive projectile from the pool
         if (!projectile) return; // If no inactive projectile is available, exit
 
+        const facingRight = player.lastDirection === Phaser.Physics.Arcade.FACING_RIGHT
+        if (facingRight) {
+            projectile.speed = Math.abs(projectile.speed);
+            projectile.setFlipX(false);
+        } else {
+            projectile.speed = -Math.abs(projectile.speed);
+            projectile.setFlipX(true);
+        }
         // Fire the projectile from the player's position
-        projectile.fire(player, isCrouching);
+        projectile.fire(player, facingRight, isCrouching);
     }
 }
 

@@ -1,7 +1,7 @@
 /**
  * authController.js
  *
- * This file handles UI interactions for login and register events and switches between the login and registration
+ * This file handles ScoreBoard interactions for login and register events and switches between the login and registration
  * according to user input.
  */
 
@@ -74,7 +74,7 @@ registerForm.addEventListener('submit', async (event) => {
 
 /**
  * Displays the registration form when the user clicks the "Click here to register" link.
- * Updates UI elements to show the registration form and hides the login form.
+ * Updates ScoreBoard elements to show the registration form and hides the login form.
  *
  * @event click
  * @returns {void}
@@ -94,7 +94,7 @@ registerLink.addEventListener('click', () => {
 
 /**
  * Displays the login form when the user clicks the "Click here to login" link.
- * Updates UI elements to show the login form and hides the registration form.
+ * Updates ScoreBoard elements to show the login form and hides the registration form.
  *
  * @event click
  * @returns {void}

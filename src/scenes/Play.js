@@ -1,17 +1,19 @@
 /**
  * @fileoverview Defines the Play scene for the Phaser game.
- * The Play scene handles the game world, player and enemies.
+ * The Play scene handles the game world, players, enemies, and collectables.
  */
 
 import Survivor from '../sprites/Survivor';
+import Shoot from '../attacks/Shoot'
 import Collectables from '../groups/Collectables'
 import Enemies from '../groups/Enemies';
+import ScoreBoard from '../gamebar/ScoreBoard'
 
 /**
  * @class Play
  * @extends {Phaser.Scene}
  * @classdesc The main game scene where gameplay occurs. It handles creating the map,
- * player, enemies, collisions, and camera setup.
+ * player, enemies, collectables, collisions, and camera setup.
  */
 class Play extends Phaser.Scene {
     /**
@@ -21,8 +23,9 @@ class Play extends Phaser.Scene {
     constructor(config) {
         super('play');
         this.config = config;
-        this.scaleFactor = this.config.scaleFactor;
-        this.survivor = null;
+        this.scaleFactor = this.config.scaleFactor; // How much to scale up assets
+
+        this.survivor = null; // Initialise the main player
     }
 
     /**
@@ -30,15 +33,19 @@ class Play extends Phaser.Scene {
     create() {
         // Create map and layers
         const map = this.createMap().map;
-
         const tileset = this.createMap().tileset;
         const layers = this.createLayers(map, tileset);
         const levelBounds = this.getPlayerBounds(layers.levelBoundsLayer); // Start and end zones of the sprites
         const collectables = this.createCollectables(layers.collectableLayer);
 
+        // Create scoreboard
+        this.score = 0;
+        this.scoreboard = new ScoreBoard(this, 225, 90);
+
         // Get the layer height and multiply by scaleFactor to get the visually rendered height
         const scaledLayerHeight = layers.terrainLayer.height * this.scaleFactor;
 
+        // Offset and scaling
         const offsetX = 0; // Horizontal offset - move map to the left edge of the game-container
         const offsetY = (this.scale.height - scaledLayerHeight) / 2; // Vertical offset - center the map vertically
 
@@ -46,43 +53,39 @@ class Play extends Phaser.Scene {
         const survivor = this.createPlayer(layers, levelBounds.start, offsetX, offsetY);
         const enemies = this.createEnemies(layers.enemySpawnsLayer, offsetX, offsetY, layers.terrainLayer, survivor);
 
-        this.createPlayerColliders(survivor, {
+        // Player and enemy collision setup
+        this.createPlayerColliders(survivor, {colliders: {terrainLayer: layers.terrainLayer,}});
+        this.createPlayerOverlap(survivor, collectables);
+        this.createEnemyColliders(enemies, {colliders: {terrainLayer: layers.terrainLayer, survivor}});
+        this.createProjectilesCollider(survivor.projectiles, {
             colliders: {
                 terrainLayer: layers.terrainLayer,
-            }
-        });
-
-        this.createPlayerOverlap(survivor, collectables); // Set up overlap with collectables
-
-        // Enable enemy collision with terrain layer and the player
-        this.createEnemyColliders(enemies, {
-            colliders: {
-                terrainLayer: layers.terrainLayer, survivor
+                survivor
             }
         });
 
         // Scale up all layers and sprites to be 4 times their size
-        const layerNames = ['backgroundLayer', 'terrainLayer', 'foregroundLayer', 'decorationLayer'];
-        layerNames.forEach(layerName => {
-            layers[layerName].setScale(this.scaleFactor);
+        const layerNames = ['backgroundLayer', 'backgroundEntryLayer', 'terrainLayer', 'foregroundLayer', 'decorationLayer'];
+        layerNames.forEach(layer => {
+            layers[layer].setScale(this.scaleFactor);
+            layers[layer].setPosition(offsetX, offsetY);
         });
 
-        // Set position of all layers
-        layerNames.forEach(layerName => {
-            layers[layerName].setPosition(offsetX, offsetY);
+        // Apply lighting to main layers
+        Object.keys(layers).forEach(layer => {
+            if (layer === 'decorationLayer' || layer === 'backgroundEntryLayer') {
+                return;
+            }
+            if (layers[layer] && layers[layer].setPipeline) {
+                layers[layer].setPipeline('Light2D');
+            }
         });
 
         this.setupCamera(survivor, layers); // Set up camera to follow the player
         this.createEndOfLevel(survivor, levelBounds.end, offsetX, offsetY); // Define end of level zone
 
-        // Enable the lighting system and set ambient lighting
-        this.lights.enable().setAmbientColor(0xc4c4c4);
-
-        layers.foregroundLayer.setPipeline('Light2D');
-        layers.foregroundLayer.setTint(0x867db0);
-
-        layers.terrainLayer.setPipeline('Light2D');
-        layers.terrainLayer.setTint(0x867db0);
+        // Enable lighting system and set a dark ambient color to simulate a cave
+        this.lights.enable().setAmbientColor(0x504978);
     }
 
     /**
@@ -96,28 +99,6 @@ class Play extends Phaser.Scene {
     }
 
     /**
-     * Creates and positions collectable items based on the specified layer.
-     *
-     * This function initialises a new `Collectables` group, iterates through each object in the `collectablesLayer`,
-     * and positions each collectable item at the scaled coordinates within the game world.
-     *
-     * @function createCollectables
-     * @param {Phaser.Tilemaps.ObjectLayer} collectablesLayer - The layer containing collectable object data from the tilemap.
-     * @returns {Collectables} The created `Collectables` group with all items positioned as defined in the layer.
-     */
-    createCollectables(collectablesLayer) {
-        const collectables = new Collectables(this);
-
-        collectablesLayer.objects.forEach((collectableObject) => {
-            const startX = collectableObject.x * this.scaleFactor;
-            const startY = collectableObject.y * this.scaleFactor;
-            collectables.get(startX, startY, 'blue-coin');
-        });
-
-        return collectables;
-    }
-
-    /**
      * Creates all layers for the game map.
      * @param {object} map - The tilemap object.
      * @param {object} tileset - The tileset object.
@@ -125,6 +106,7 @@ class Play extends Phaser.Scene {
      */
     createLayers(map, tileset) {
         const backgroundLayer = map.createLayer('background', tileset, 0, 0);
+        const backgroundEntryLayer = map.createLayer('backgroundentry', tileset, 0, 0);
         const foregroundLayer = map.createLayer('foreground', tileset, 0, 0);
         const terrainLayer = map.createLayer('terrain', tileset, 0, 0);
         const decorationLayer = map.createLayer('decoration', tileset, 0, 0);
@@ -132,17 +114,17 @@ class Play extends Phaser.Scene {
         const enemySpawnsLayer = map.getObjectLayer('enemyspawns');
         const collectableLayer = map.getObjectLayer('collectables');
 
-        // Enable collision detection for all tiles in the terrainLayer, except for tiles with the index -1.
-        // The index -1 represents empty tiles or tiles that don't exist
+        // Enable collision for terrain layer
         terrainLayer.setCollisionByExclusion([-1]);
         return {
             backgroundLayer,
+            backgroundEntryLayer,
             foregroundLayer,
             terrainLayer,
             decorationLayer,
             levelBoundsLayer,
             enemySpawnsLayer,
-            collectableLayer
+            collectableLayer,
         };
     }
 
@@ -157,6 +139,17 @@ class Play extends Phaser.Scene {
             start: levelBoundsLayer.objects.find(bound => bound.name === 'start'),
             end: levelBoundsLayer.objects.find(bound => bound.name === 'end')
         };
+    }
+
+    /**
+     * Creates and positions collectable items based on the specified layer.
+     * @param {Phaser.Tilemaps.ObjectLayer} collectablesLayer - The layer containing collectable object data from the tilemap.
+     * @returns {Collectables} The created `Collectables` group with all items positioned as defined in the layer.
+     */
+    createCollectables(collectablesLayer) {
+        const collectables = new Collectables(this);
+        collectables.addFromLayer(collectablesLayer, this.scaleFactor);
+        return collectables;
     }
 
     /**
@@ -197,22 +190,25 @@ class Play extends Phaser.Scene {
         return enemies;
     }
 
+    /**
+     * Sets up collision detection for the player with specified colliders.
+     * Adds a collider for the player with the terrain layer, allowing the player to interact with it.
+     * @param survivor - The player character instance.
+     * @param colliders - An object containing layers and objects to collide with.
+     * @param colliders.terrainLayer - The terrain layer for player collisions.
+     */
     createPlayerColliders(survivor, {colliders}) {
         survivor.addCollider(colliders.terrainLayer);
     }
 
+    /**
+     * Sets up overlap detection between the player and collectable items.
+     * When the player overlaps with a collectable item, the `onCollect` callback is triggered.
+     * @param {Survivor} survivor - The player character instance.
+     * @param {Collectables} collectables - The group of collectable items in the game.
+     */
     createPlayerOverlap(survivor, collectables) {
         this.physics.add.overlap(survivor, collectables, this.onCollect, null, this);
-    }
-
-    /**
-     * Callback function for when the survivor collects an item.
-     * @param survivor - The player character.
-     * @param collectable - The collected item.
-     */
-    onCollect(survivor, collectable) {
-        collectable.disableBody(true, true);
-        console.log("Item collected!");
     }
 
     /**
@@ -227,6 +223,22 @@ class Play extends Phaser.Scene {
             collision between the enemy and survivor */
             .addCollider(colliders.survivor.projectiles, this.onShoot); /* Play onShoot() callback function when collision happens
             between survivors weapon and the enemy */
+    }
+
+    /**
+     * Sets up collision detection for projectiles with the specified colliders.
+     * When a projectile collides with the terrain layer, it triggers the projectile's collision handler.
+     * @param {Phaser.GameObjects.Group} projectiles - The group of projectiles to check for collisions.
+     * @param {object} colliders - An object containing layers and objects to collide with.
+     * @param colliders.terrainLayer - The terrain layer used for projectile collisions.
+     */
+    createProjectilesCollider(projectiles, {colliders}) {
+        this.physics.add.collider(projectiles, colliders.terrainLayer, (projectile) => {
+            // Ensure that the projectile is an instance of Shoot, then handle the collision
+            if (projectile instanceof Shoot) {
+                projectile.handleCollision();
+            }
+        });
     }
 
     /**
@@ -245,6 +257,17 @@ class Play extends Phaser.Scene {
      */
     onShoot(enemy, source) {
         enemy.takeDamage(source);
+    }
+
+    /**
+     * Callback function for when the survivor collects an item.
+     * @param survivor - The player character.
+     * @param collectable - The collected item.
+     */
+    onCollect(survivor, collectable) {
+        this.score += collectable.score;
+        this.scoreboard.updateScore(this.score); // Update the score on the scoreboard
+        collectable.disableBody(true, true);
     }
 
     /**

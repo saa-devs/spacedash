@@ -14,10 +14,10 @@ const leaderboardButton = generateLeaderboardButton();
 const logoutButton = generateLogoutButton();
 
 /**
- * Creates the main profile UI container element.
+ * Creates the main profile ScoreBoard container element.
  *
  * @function createProfile
- * @returns {HTMLElement} The profile UI container.
+ * @returns {HTMLElement} The profile ScoreBoard container.
  */
 function createProfile() {
     const profileUI = document.createElement('div');
@@ -26,10 +26,10 @@ function createProfile() {
 }
 
 /**
- * Generates the HTML structure for character selection in the profile UI.
+ * Generates the HTML structure for character selection in the profile ScoreBoard.
  *
  * @function generateSelectCharacterHTML
- * @param {HTMLElement} profileUI - The profile UI container to append character selection HTML.
+ * @param {HTMLElement} profileUI - The profile ScoreBoard container to append character selection HTML.
  */
 function generateSelectCharacterHTML(profileUI) {
     profileUI.innerHTML = `
@@ -41,7 +41,7 @@ function generateSelectCharacterHTML(profileUI) {
 }
 
 /**
- * Appends action buttons (play, stats, leaderboard, logout) to the profile UI's action menu.
+ * Appends action buttons (play, stats, leaderboard, logout) to the profile ScoreBoard's action menu.
  *
  * @function generateButtons
  * @param {HTMLElement} playButton - The play button element.
@@ -60,7 +60,7 @@ function generateButtons(playButton, statsButton, leaderboardButton, logoutButto
 }
 
 /**
- * Generates the play button for the profile UI and attaches a click event to start the game.
+ * Generates the play button for the profile ScoreBoard and attaches a click event to start the game.
  *
  * @function generatePlayButton
  * @returns {HTMLElement} The play button element.

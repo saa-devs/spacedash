@@ -29,11 +29,12 @@ class Collectable extends Phaser.Physics.Arcade.Sprite {
 
         // Set scale and other properties
         this.setScale(2);
+        this.setOrigin(0, 1);
         this.score = 1;
 
         // Register and play the 'spin' animation
-        blueCoinAnimation(scene.anims);  // Ensure the animation is created
-        this.play('spin');               // Now play the animation
+        blueCoinAnimation(scene.anims);
+        this.play('spin');
     }
 }
 
