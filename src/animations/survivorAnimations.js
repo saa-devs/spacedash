@@ -5,7 +5,6 @@
 
 /**
  * Creates and sets up animations for the Survivor character.
- *
  * @param {Phaser.Animations.AnimationManager} anims - The animation manager used to create and manage animations.
  */
 export default anims => {
@@ -78,6 +77,13 @@ export default anims => {
         key: 'crouch-quick-shoot', // Animation key for quick crouch shoot action
         frames: anims.generateFrameNumbers('survivor', { start: 41, end: 42 }),
         frameRate: 10,
+        repeat: 0 // Play once
+    });
+
+    anims.create({
+        key: 'die', // Animation key for quick crouch shoot action
+        frames: anims.generateFrameNumbers('survivor', { start: 48, end: 55 }),
+        frameRate: 3,
         repeat: 0 // Play once
     });
 };

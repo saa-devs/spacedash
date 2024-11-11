@@ -1,6 +1,6 @@
 /**
  * @fileoverview Defines the Undead enemy type, a specific enemy class that extends the base Enemy class.
- * Adds custom behavior and animations specific to the Undead enemy type.
+ * Adds custom behaviour and animations specific to the Undead enemy type.
  */
 
 import Enemy from './Enemy';
@@ -9,7 +9,7 @@ import initAnimations from "../animations/undeadAnimations";
 /**
  * @class Undead
  * @extends {Enemy}
- * @classdesc A type of enemy that inherits common enemy properties and behaviors from the Enemy superclass.
+ * @classdesc A type of enemy that inherits common enemy properties and behaviours from the Enemy superclass.
  * The Undead has custom animations and takes damage with specific animations.
  */
 class Undead extends Enemy {
@@ -21,17 +21,17 @@ class Undead extends Enemy {
      * @param {Phaser.GameObjects.Sprite} survivor - The player character to follow or target.
      */
     constructor(scene, x, y, survivor) {
-        super(scene, x, y, 'undead', survivor); // Call the Enemy constructor with Undead-specific parameters
+        super(scene, x, y, 'undead', survivor);
         scene.add.existing(this); // Add the undead enemy sprite to the scene
         scene.physics.add.existing(this); // Enable physics for the undead enemy
         initAnimations(this.scene.anims); // Initialise animations specific to the Undead type
-        this.setPipeline('Light2D');
+        this.setPipeline('Light2D'); // Enable lighting effect
 
         this.isDead = false; // Track if the enemy is dead
     }
 
     /**
-     * Updates the enemy's behavior each frame, including animations and movement.
+     * Updates the enemy's behaviour each frame, including animations and movement.
      * Stops updating if the Undead is dead.
      * @param {number} time - The current time in the game loop.
      */
@@ -40,9 +40,7 @@ class Undead extends Enemy {
         super.update(time); // Call the parent class's update method
 
         // Check if the enemy is playing any specific animations related to being hurt, hit, or dying
-        if (this.isPlayingAnims('undead-hurt')
-            || this.isPlayingAnims('undead-hit')
-            || this.isPlayingAnims('undead-die')) {
+        if (this.isPlayingAnims('undead-hurt') || this.isPlayingAnims('undead-hit') || this.isPlayingAnims('undead-die')) {
             return; // Skip further animations if one of these is active
         }
 
@@ -61,12 +59,14 @@ class Undead extends Enemy {
         // Check if health is zero or below to trigger the death sequence
         if (this.health <= 0) {
             this.play('undead-die', true); // Play the death animation
+            this.body.setAllowGravity(false); // Disable gravity to prevent falling
+            this.body.setImmovable(true); // Keep the enemy in its current position
+            this.isDead = true; // Mark the enemy as dead
 
-            // Once the death animation completes, set the Undead to its final frame and mark it as inactive
+            // Set the final death frame and make it inactive after animation completes
             this.once('animationcomplete-undead-die', () => {
                 this.setFrame(29); // Set to the last frame of the death animation
                 this.setActive(false); // Deactivate the enemy in the game
-                this.isDead = true; // Mark the enemy as dead
             });
         }
     }

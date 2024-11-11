@@ -6,7 +6,6 @@
 export default {
     /**
      * Checks if the specified animation is currently playing on this game object.
-     *
      * @param {string} animsKey - The key of the animation to check.
      * @returns {boolean} - Returns true if the specified animation is currently playing, false otherwise.
      */
