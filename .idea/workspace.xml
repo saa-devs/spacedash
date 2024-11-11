@@ -8,25 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b9651be2-136e-4a86-9eef-e7920a38b8aa" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/gamebar/ScoreBoard.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/utilities.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game-assets/tileset/spacetileset.json" beforeDir="false" afterPath="$PROJECT_DIR$/game-assets/tileset/spacetileset.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/controller/authController.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/controller/authController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/controller/profileController.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/controller/profileController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/view/profileView.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/view/profileView.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/animations/blueCoinAnimation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/animations/blueCoinAnimation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/attacks/Projectiles.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/attacks/Projectiles.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/attacks/Shoot.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/attacks/Shoot.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gamebar/HealthBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/gamebar/HealthBar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/groups/Collectables.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/groups/Collectables.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/Init.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/Init.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/Play.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/Play.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sprites/Collectable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sprites/Collectable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sprites/Enemy.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sprites/Enemy.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sprites/Survivor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sprites/Survivor.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sprites/Undead.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sprites/Undead.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/groups/Enemies.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/groups/Enemies.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
