@@ -5,11 +5,9 @@
 
 /**
  * Creates and sets up animations for the Undead enemy character.
- *
  * @param {Phaser.Animations.AnimationManager} anims - The animation manager used to create and manage animations.
  */
 export default anims => {
-    // Check if the idle animation already exists to prevent duplicate creation
     if (!anims.exists('undead-idle')) {
         anims.create({
             key: 'undead-idle', // Animation key for idle state
@@ -19,7 +17,6 @@ export default anims => {
         });
     }
 
-    // Check if the hit animation exists to prevent duplicate creation
     if (!anims.exists('undead-hit')) {
         anims.create({
             key: 'undead-hit', // Animation key for hit state
@@ -29,7 +26,6 @@ export default anims => {
         });
     }
 
-    // Check if the hurt animation exists to prevent duplicate creation
     if (!anims.exists('undead-hurt')) {
         anims.create({
             key: 'undead-hurt', // Animation key for hurt state
@@ -39,7 +35,6 @@ export default anims => {
         });
     }
 
-    // Check if the death animation exists to prevent duplicate creation
     if (!anims.exists('undead-die')) {
         anims.create({
             key: 'undead-die', // Animation key for death state
