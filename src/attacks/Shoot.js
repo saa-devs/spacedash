@@ -1,6 +1,6 @@
 /**
  * @fileoverview Defines the Shoot class, representing a single projectile fired by the player.
- * Manages the projectile's movement, firing behavior, and interactions with enemies.
+ * Manages the projectile's movement, firing behaviour, and interactions with enemies.
  */
 
 import Phaser from 'phaser';
@@ -24,11 +24,11 @@ class Shoot extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this); // Add the projectile to the scene
         scene.physics.add.existing(this); // Enable physics for the projectile
 
-        this.setScale(4);
+        this.setScale(4); // Set scale of the projectile sprite
 
-        this.speed = 1000;
-        this.maxDistance = 600;
-        this.travelDistance = 0;
+        this.speed = 1000; // Speed of projectile
+        this.maxDistance = 400; // Maximum distance before deactivation
+        this.travelDistance = 0; // Accumulated distance travelled
 
         this.damage = 1; // Amount of damage dealt by the projectile
 
@@ -56,7 +56,12 @@ class Shoot extends Phaser.Physics.Arcade.Sprite {
         this.emitter.stop(); // Initially stop emitting particles
     }
 
-    /** Sets up event listeners for the scene's update event. */
+    /**
+     * Sets up event listeners for the scene's update event to track changes each frame.
+     * @method initEvents
+     * @memberof Shoot
+     * @private
+     */
     initEvents() {
         this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
     }
@@ -68,44 +73,44 @@ class Shoot extends Phaser.Physics.Arcade.Sprite {
      */
     preUpdate(time, delta) {
         super.preUpdate(time, delta);
-        this.travelDistance += this.body.deltaAbsX(); // Accumulate traveled distance
+        this.travelDistance += this.body.deltaAbsX(); // Accumulate travelled distance
 
         if (this.travelDistance >= this.maxDistance) {
             this.activeShoot(false);
             this.body.reset(0, 0);
-            this.travelDistance = 0;
+            this.travelDistance = 0; // Reset travel distance
         }
     }
 
     /**
      * Fires the projectile from the player's position, adjusting for direction and crouching state.
      * @param {Phaser.GameObjects.Sprite} player - The player character firing the projectile.
-     * @param facingRight - Whether the player is facing right, affecting projectile offsetX.
+     * @param {boolean} facingRight - Whether the player is facing right, affecting projectile offsetX.
      * @param {boolean} isCrouching - Whether the player is crouching, affecting projectile offsetY.
      */
     fire(player, facingRight, isCrouching) {
         let offsetX = facingRight ? 35 : -50; // Adjust X offset based on direction
         let offsetY = isCrouching ? -55 : -85; // Adjust Y offset based on crouching
 
-        this.activeShoot(true);
+        this.activeShoot(true); // Activate the projectile
         this.travelDistance = 0; // Reset travel distance
-        this.body.reset(player.x + offsetX, player.y + offsetY);
+        this.body.reset(player.x + offsetX, player.y + offsetY); // Set initial position
 
         // Set velocity and flip direction based on facingRight
         this.setVelocityX(facingRight ? Math.abs(this.speed) : -Math.abs(this.speed));
-        this.setFlipX(!facingRight);
-        this.body.enable = true;
+        this.setFlipX(!facingRight); // Adjust sprite orientation
+        this.body.enable = true; // Enable physics body
     }
-
 
     /**
      * Handles the event when the projectile hits an enemy, deactivating the projectile.
      * @param {Phaser.GameObjects.Sprite} enemy - The enemy hit by the projectile.
      */
     deliverHit() {
+        this.emitter.explode(2, this.x, this.y); // Trigger explosion effect
         this.activeShoot(false); // Deactivate the projectile upon impact
-        this.body.reset(0, 0); // Reset its position to prevent further interaction
-        this.travelDistance = 0;
+        this.body.reset(0, 0); // Reset position to avoid unintended collisions
+        this.travelDistance = 0; // Reset travel distance
     }
 
     /**
@@ -113,8 +118,8 @@ class Shoot extends Phaser.Physics.Arcade.Sprite {
      * Disables the projectile's active state and triggers a particle explosion effect at the collision point.
      */
     handleCollision() {
-        this.activeShoot(false);
-        this.emitter.explode(2, this.x, this.y); // Emit exactly 5 particles at collision point
+        this.activeShoot(false); // Deactivate projectile on collision
+        this.emitter.explode(2, this.x, this.y); // Trigger explosion effect
     }
 
     /**

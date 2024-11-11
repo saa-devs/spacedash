@@ -18,9 +18,7 @@ class ScoreBoard extends Phaser.GameObjects.Container {
         this.setupList();
     }
 
-    /**
-     * Sets up the list of elements in the scoreboard
-     */
+    /** Sets up the list of elements in the scoreboard */
     setupList() {
         // Create the scoreboard display and add it to the container
         const scoreboard = this.createScoreBoard();
