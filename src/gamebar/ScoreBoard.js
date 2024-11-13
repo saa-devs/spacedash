@@ -46,7 +46,8 @@ class ScoreBoard extends Phaser.GameObjects.Container {
     /**
      * Updates the displayed score text
      * @param {number} score - The new score to display
-     */    updateScore(score) {
+     */
+    updateScore(score) {
         this.scoreText.setText(score);
     }
 }

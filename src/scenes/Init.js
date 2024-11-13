@@ -11,8 +11,8 @@ import beam from '../../game-assets/effects/beam.png';
 import beamHit from '../../game-assets/effects/beamhit.png';
 import particle from '../../game-assets/effects/particle.png';
 import bluecoin from '../../game-assets/collectables/blue-coin.png'
-
-import tilemapJSON from '../../game-assets/tileset/spacetileset.json';
+import levelOne from '../../game-assets/tileset/spacetileset-levelone.json';
+import levelTwo from '../../game-assets/tileset/spacetileset-leveltwo.json';
 import tilesetImage from '../../game-assets/tileset/spacetileset.png';
 
 /**
@@ -35,7 +35,9 @@ class Init extends Phaser.Scene {
      */
     preload() {
         // Load the tilemap JSON file and the corresponding tileset image
-        this.load.tilemapTiledJSON('tilemap', tilemapJSON);
+        this.load.tilemapTiledJSON('level-one', levelOne);
+        this.load.tilemapTiledJSON('level-two', levelTwo);
+
         this.load.image('tileset', tilesetImage);
         this.load.image('particle', particle);
         this.load.image('beam-hit', beamHit);

@@ -5,9 +5,8 @@
  * selection and action buttons for playing the game, viewing stats/leaderboard, and logging out.
  */
 
-const {getCharacterURLs} = require("../model/profileModel");
-const {loadGame} = require("../../src/game");
-const {
+import {getUserInfo, getCharacterURLs, updateCharacter} from '../model/profileModel';
+import {
     profileUI,
     generateSelectCharacterHTML,
     generateButtons,
@@ -15,9 +14,8 @@ const {
     statsButton,
     leaderboardButton,
     logoutButton
-} = require('../view/profileView');
-
-const gameDiv = document.getElementById('game-div');
+} from '../view/profileView';
+import {createChooseLevel} from './chooseLevelController';
 
 /**
  * Initialises and displays the profile ScoreBoard, including character selection and action buttons.
@@ -26,14 +24,25 @@ const gameDiv = document.getElementById('game-div');
  * @function loadProfile
  * @returns {Promise<void>} No return value.
  */
-async function loadProfile() {
-    gameDiv.appendChild(profileUI);
+async function loadProfile(username) {
+    // Run the async calls and wait for their completion
+    const userInfo = await getUserInfo(username);
+    const characterURLs = await storeCharacterURLs();
+
+    if (userInfo) {
+        sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+        console.log("Stored user info in session storage:", JSON.stringify(userInfo));
+    } else {
+        console.log("User info could not be retrieved.");
+    }
+
     generateSelectCharacterHTML(profileUI);
     generateButtons(playButton, statsButton, leaderboardButton, logoutButton);
-    playButtonSetup();
+    playButtonSetup(playButton);
 
-    await storeCharacterURLs();
-    insertCharacterLabels();
+    if (characterURLs) {
+        insertCharacterLabels(characterURLs);
+    }
 }
 
 /**
@@ -46,19 +55,10 @@ async function loadProfile() {
 async function storeCharacterURLs() {
     let characterURLs;
     try {
-        characterURLs = JSON.parse(localStorage.getItem('characterURLs'));
-    } catch (error) {
-        console.error('Character URLs not found in localStorage. Fetching from S3...');
-        characterURLs = null; // Fallback to fetching from S3
-    }
-
-    if (!characterURLs) {
         characterURLs = await getCharacterURLs();
-        if (characterURLs) {
-            localStorage.setItem('characterURLs', JSON.stringify(characterURLs));
-        } else {
-            console.error('Error: characterURLs is undefined after fetching.');
-        }
+    } catch (error) {
+        console.error('Error retrieving characterURLs:', error);
+        characterURLs = null;
     }
     return characterURLs;
 }
@@ -70,28 +70,50 @@ async function storeCharacterURLs() {
  * @function insertCharacterLabels
  * @returns {void}
  */
-function insertCharacterLabels() {
-    const characterURLs = JSON.parse(localStorage.getItem('characterURLs'));
+function insertCharacterLabels(characterURLs) {
+    const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    const username = userInfo ? userInfo.username : null;
+    const userCharacter = userInfo ? userInfo.character : null;
+
+    // Generate the character selection HTML
     const spriteSelect = document.getElementById('sprite-select');
     spriteSelect.innerHTML = Object.entries(characterURLs).map(([colour, url]) => `
-    <div>
+    <label class="character-label">
         <input type="radio" name="character" value="${colour}" class="character-radio" id="${colour}-radio" />
-        <label class="character-label" for="${colour}-radio">
         <img id="${colour}-character" 
              class="character-image" 
              alt="${colour.charAt(0).toUpperCase() + colour.slice(1)} Character" 
              src="${url}" />
-        </label>
-    </div>
+    </label>
     `).join('');
 
+    // Select all radio buttons and check the one that matches userCharacter
     const radioButtons = document.querySelectorAll("input[name='character']");
+    let isCharacterSet = false;
+
     radioButtons.forEach(radio => {
-        radio.addEventListener('click', () => {
-            console.log(radio.value);
+        if (radio.value === userCharacter) {
+            radio.checked = true;
+            sessionStorage.setItem('selectedCharacter', radio.value);
+            isCharacterSet = true;
+        }
+    });
+
+    // If no matching character is set, check the first radio button by default
+    if (radioButtons.length > 0 && !isCharacterSet) {
+        radioButtons[0].checked = true;
+        sessionStorage.setItem('selectedCharacter', radioButtons[0].value);
+    }
+
+    // Add click event to each radio button to update session storage on selection
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', async () => {
+            await updateCharacter(username, radio.value);
+            sessionStorage.setItem('selectedCharacter', radio.value);
         });
     });
 }
+
 
 /**
  * Sets up the play button with an event listener that hides the profile ScoreBoard and starts the game.
@@ -99,11 +121,15 @@ function insertCharacterLabels() {
  * @function playButtonSetup
  * @returns {void}
  */
-function playButtonSetup() {
-    playButton.addEventListener('click', () => {
-        profileUI.style.display = 'none';
-        loadGame();
-    })
+function playButtonSetup(playButton) {
+    playButton.removeEventListener('click', onPlayButtonClick); // Remove any existing listener
+    playButton.addEventListener('click', onPlayButtonClick); // Add the new listener
+}
+
+// Define the click event handler separately
+function onPlayButtonClick() {
+    profileUI.style.display = 'none';
+    createChooseLevel();
 }
 
 module.exports = {loadProfile};

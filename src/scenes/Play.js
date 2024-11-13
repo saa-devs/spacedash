@@ -9,6 +9,7 @@ import Collectables from '../groups/Collectables';
 import Enemies from '../groups/Enemies';
 import ScoreBoard from '../gamebar/ScoreBoard';
 import EventEmitter from '../events/Emitter';
+import gameWon from "../../scripts/view/gameOverView";
 
 /**
  * @class Play
@@ -25,8 +26,7 @@ class Play extends Phaser.Scene {
         super('play');
         this.config = config;
         this.scaleFactor = this.config.scaleFactor; // Scaling factor for game assets
-        this.survivor = null; // Initialises the main player
-        this.startTime = 0;
+        this.survivor = null; // Initialises the main
     }
 
     /**
@@ -49,7 +49,12 @@ class Play extends Phaser.Scene {
         const offsetY = (this.scale.height - scaledLayerHeight) / 2; // Vertical offset - centers the map vertically
 
         const survivor = this.createPlayer(layers, levelBounds.start, offsetX, offsetY);
-        const enemies = this.createEnemies(layers.enemySpawnsLayer, offsetX, offsetY, layers.terrainLayer, survivor);
+        const {
+            enemies,
+            enemyCount
+        } = this.createEnemies(layers.enemySpawnsLayer, offsetX, offsetY, layers.terrainLayer, survivor);
+
+        this.enemyCount = enemyCount;
 
         this.createPlayerColliders(survivor, {colliders: {terrainLayer: layers.terrainLayer}});
         this.createPlayerOverlap(survivor, collectables);
@@ -75,7 +80,7 @@ class Play extends Phaser.Scene {
         });
 
         this.setupCamera(survivor, layers);
-        this.createEndOfLevel(survivor, levelBounds.end, offsetX, offsetY);
+        this.createEndOfLevel(survivor, enemies, levelBounds.end, offsetX, offsetY);
         this.lights.enable().setAmbientColor(0x504978); // Simulate a cave with ambient lighting
 
         this.createGameEvent();
@@ -93,8 +98,16 @@ class Play extends Phaser.Scene {
      * @returns {object} An object containing the map and tileset.
      */
     createMap() {
-        const map = this.make.tilemap({key: 'tilemap'});
-        const tileset = map.addTilesetImage('spacetileset', 'tileset');
+        let map = null;
+        let tileset = null;
+        if (this.config.level === 1) {
+            map = this.make.tilemap({key: 'level-one'});
+        } else if (this.config.level === 2) {
+            map = this.make.tilemap({key: 'level-two'});
+        }
+        if (map) {
+            tileset = map.addTilesetImage('spacetileset', 'tileset');
+        }
         return {map, tileset};
     }
 
@@ -172,11 +185,12 @@ class Play extends Phaser.Scene {
      * @param {number} offsetY - The vertical offset for positioning.
      * @param {object} terrainLayer - The terrain layer for setting collision.
      * @param {Survivor} survivor - The player character to target.
-     * @returns {Enemies} - The group of created enemies.
+     * @returns {{enemyCount: number, enemies: Enemies}} - The group of created enemies.
      */
     createEnemies(enemySpawnsLayer, offsetX, offsetY, terrainLayer, survivor) {
         const enemies = new Enemies(this);
         const enemyTypes = enemies.getTypes();
+        let enemyCount = 0;
 
         enemySpawnsLayer.objects.forEach(spawnPoint => {
             const startX = spawnPoint.x * this.scaleFactor;
@@ -184,8 +198,9 @@ class Play extends Phaser.Scene {
             const enemy = new enemyTypes[spawnPoint.type](this, startX, startY, survivor);
             enemy.setTerrainColliders(terrainLayer);
             enemies.add(enemy);
+            enemyCount++;
         });
-        return enemies;
+        return {enemies, enemyCount};
     }
 
     /** Sets up collision detection for the player with specified colliders. */
@@ -255,11 +270,12 @@ class Play extends Phaser.Scene {
     /**
      * Defines the end-of-level zone and triggers an event when the player reaches it.
      * @param {Survivor} survivor - The player character.
+     * @param enemies
      * @param {object} end - The end position for the level.
      * @param {number} offsetX - The horizontal offset for positioning.
      * @param {number} offsetY - The vertical offset for positioning.
      */
-    createEndOfLevel(survivor, end, offsetX, offsetY) {
+    createEndOfLevel(survivor, enemies, end, offsetX, offsetY) {
         const endX = end.x * this.scaleFactor;
         const endY = end.y * this.scaleFactor + offsetY;
 
@@ -269,11 +285,20 @@ class Play extends Phaser.Scene {
             .setOrigin(0.5, 1);
 
         const overlap = this.physics.add.overlap(survivor, endOfLevel, () => {
-            const endTime = this.time.now; // Capture the end time
-            const timeTaken = ((endTime - this.startTime) / 1000).floor(2); // Calculate time in seconds
-            console.log("You have won!");
-            console.log(`Time taken: ${timeTaken}s`);
-            overlap.destroy();
+            let totalDefeatedEnemies = 0;
+            enemies.getChildren().forEach(enemy => {
+                totalDefeatedEnemies += enemy.deadCount;
+            });
+
+            if (totalDefeatedEnemies === this.enemyCount) {
+                const endTime = this.time.now; // Capture the end time
+                const timeTaken = ((endTime - this.startTime) / 1000).toFixed(1); // Calculate time in seconds
+                console.log("You have won!");
+                console.log(`Time taken: ${timeTaken}s`);
+                console.log(`You scored: ${this.score} points`);
+                gameWon();
+                overlap.destroy();
+            }
         });
     }
 }

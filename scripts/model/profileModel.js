@@ -1,28 +1,56 @@
-/**
- * profileModel.js
- *
- * This file provides functions to interact with the Amazon S3 and retrieve data needed for the profile
- * view of the game.
- */
-
-/**
- * Retrieves character URLs from the server.
- *
- * This function sends a GET request to the specified endpoint to fetch character URLs.
- * If the request is successful, the URLs are returned in JSON format.
- * If the request fails, an error is logged to the console.
- *
- * @async
- * @function getCharacterURLs
- * @returns {Promise<Object|undefined>} A promise that resolves to an object containing character URLs, or `undefined` if an error occurs.
- */
 async function getCharacterURLs() {
+    const apiUrl = 'https://vl34kgdy52.execute-api.us-east-1.amazonaws.com/dev/getCharacterURLS3';
+
     try {
-        const response = await fetch('http://localhost:5100/characters');
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            console.error(`Error: ${response.status} - ${response.statusText}`);
+            return null;
+        }
         return await response.json();
     } catch (error) {
         console.error('Error fetching all characters:', error);
+        return null;
     }
 }
 
-module.exports = {getCharacterURLs};
+async function getUserInfo(username) {
+    const apiUrl = `https://yuc1tge4nl.execute-api.us-east-1.amazonaws.com/dev/getUserInfoDDB?username=${username}`;
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            console.log(`Error: ${response.statusText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("API call error:", error);
+        return undefined; // Return undefined or throw error if needed
+    }
+}
+
+async function updateCharacter(username, colour) {
+
+    const apiUrl = `https://rctm78l2ab.execute-api.us-east-1.amazonaws.com/dev/updateCharacterDDB?username=${username}&colour=${colour}`;
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'GET',  // Changed to GET
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            console.log('An error has occurred')
+        }
+        const data = await response.json();
+        console.log('Update successful:', data);
+        return data;
+
+    } catch (error) {
+        console.error('Failed to update colour:', error);
+        throw error;
+    }
+}
+
+
+module.exports = {getUserInfo, getCharacterURLs, updateCharacter};

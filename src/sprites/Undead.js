@@ -24,6 +24,7 @@ class Undead extends Enemy {
         super(scene, x, y, 'undead', survivor);
         scene.add.existing(this); // Add the undead enemy sprite to the scene
         scene.physics.add.existing(this); // Enable physics for the undead enemy
+
         initAnimations(this.scene.anims); // Initialise animations specific to the Undead type
         this.setPipeline('Light2D'); // Enable lighting effect
 

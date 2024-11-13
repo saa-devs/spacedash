@@ -16,6 +16,9 @@ let errorMsg = document.getElementById('error-msg');
 const accountMsg = document.getElementById('account-msg');
 const registerLink = document.getElementById('register-link');
 
+const profileUI = document.getElementById('profile-ui');
+profileUI.style.display = 'none';
+
 
 /**
  * Handles login form submission and attempts to authenticate the user.
@@ -33,17 +36,22 @@ loginForm.addEventListener('submit', async (event) => {
     const password = document.getElementById('password').value;
 
     /* Attempt to log the user in */
-    const isValid = await checkCredentials(username, password);
+    const response = await checkCredentials(username, password);
+    const data = await response.json();
 
-    if (isValid) {
+    if (response.ok) {
         authUI.style.display = 'none';
-        await loadProfile();
+        sessionStorage.setItem('username', username);
+        profileUI.style.display = 'flex';
+        await loadProfile(username);
+    } else if (response.status === 401) {
+        errorMsg.innerText = data.message;
     }
 });
 
 /**
  * Handles registration form submission by validating input fields before sending the
- * registration request to the server. If registration is successful, it laods the user's profile,
+ * registration request to the server. If registration is successful, it loads the user's profile,
  * otherwise, displays the appropriate error message.
  *
  * @event submit
@@ -57,15 +65,16 @@ registerForm.addEventListener('submit', async (event) => {
     const createUsername = document.getElementById('create-username').value;
     const createPassword = document.getElementById('create-password').value;
     const confirmPassword = document.getElementById('confirm-password').value;
+    const characterColour = 'green';
 
     if (validRegisterDetails(createUsername, createPassword, confirmPassword)) {
-        const response = await registerUser(createUsername, createPassword);
+        const response = await registerUser(createUsername, createPassword, characterColour);
         const data = await response.json();
 
         if (response.ok) {
             errorMsg.innerText = '';
             authUI.style.display = 'none';
-            await loadProfile();
+            await loadProfile(createUsername);
         } else if (response.status === 409) {
             errorMsg.innerText = data.message;
         }

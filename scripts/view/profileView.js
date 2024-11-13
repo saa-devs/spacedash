@@ -6,7 +6,7 @@
  * selection HTML, and action buttons for gameplay (play, stats, leaderboard, logout).
  */
 
-
+const gameDiv = document.getElementById('game-div');
 const profileUI = createProfile();
 const playButton = generatePlayButton();
 const statsButton = generateStatsButton();
@@ -22,6 +22,7 @@ const logoutButton = generateLogoutButton();
 function createProfile() {
     const profileUI = document.createElement('div');
     profileUI.id = 'profile-ui';
+    gameDiv.appendChild(profileUI);
     return profileUI;
 }
 
@@ -32,9 +33,10 @@ function createProfile() {
  * @param {HTMLElement} profileUI - The profile ScoreBoard container to append character selection HTML.
  */
 function generateSelectCharacterHTML(profileUI) {
+    const loggedInUser = sessionStorage.getItem('username');
     profileUI.innerHTML = `
     <div id="select-character-div">
-        <h2 id="character-heading">Hello test123, select your character</h2>
+        <h2 id="character-heading">Hello ${loggedInUser}, select your character</h2>
         <div id="sprite-select"></div>
     </div>
     `;

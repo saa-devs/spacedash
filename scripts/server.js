@@ -5,7 +5,6 @@
  */
 
 const {checkCredentials, registerUser} = require('../aws/dynamodb');
-const {getAllCharacterURLs} = require('../aws/s3');
 
 const express = require('express'); // Import web server
 const path = require('path');
@@ -71,8 +70,8 @@ app.post('/login', async (req, res) => {
  */
 app.post('/register', async (req, res) => {
     /* Retrieve registration details from POST request */
-    const {createUsername, createPassword} = req.body;
-    const response = await registerUser(createUsername, createPassword);
+    const {createUsername, createPassword, characterColour} = req.body;
+    const response = await registerUser(createUsername, createPassword, characterColour);
 
     if (response.success) {
         return res.status(200).json({message: response.message});
@@ -82,32 +81,6 @@ app.post('/register', async (req, res) => {
         } else {
             return res.status(500).json({message: response.message});
         }
-    }
-});
-
-/**
- * GET /characters - Fetches character image URLs.
- *
- * This route handles GET requests to retrieve character image URLs.
- * It calls the `getAllCharacterURLs` function to get the URLs from AWS S3 and
- * returns them in a JSON response with a 200 status code. If an error occurs, it
- * logs the error and responds with a 500 status code and an error message.
- *
- * @name GET /characters
- * @function
- * @async
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @returns {JSON} 200 - A JSON object containing character image URLs.
- * @returns {JSON} 500 - An error message if the retrieval fails.
- */
-app.get('/characters', async (req, res) => {
-    try {
-        const characterURLs = await getAllCharacterURLs();
-        res.status(200).json(characterURLs);
-    } catch (error) {
-        console.error('Error fetching character images:', error);
-        res.status(500).json({ error: 'Failed to retrieve character images' });
     }
 });
 

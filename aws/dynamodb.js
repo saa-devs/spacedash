@@ -53,14 +53,16 @@ const checkCredentials = async (username, password) => {
  * Register a new user in the spacedash-user table.
  * @param {string} username - The username to register.
  * @param {string} password - The password to store.
+ * @param characterColour
  * @returns {Promise<object>} - Returns an object with success status and message.
  */
-const registerUser = async (username, password) => {
+const registerUser = async (username, password, characterColour) => {
     const command = {
         TableName: 'spacedash-user',
         Item: {
             username: username,
             password: password,
+            character: characterColour,
         },
         ConditionExpression: 'attribute_not_exists(username)',
     };

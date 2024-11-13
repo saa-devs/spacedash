@@ -38,6 +38,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         this.health = 3; // Initial health of the enemy
         this.damage = 1; // Damage dealt to the player upon collision
+        this.deadCount = 0;
 
         this.horizontalRayHeightOffset = 20; // Offset for horizontal raycasting
     }
@@ -73,7 +74,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     /**
      * Sets the terrain collider layer to enable edge and wall detection.
-     * @param {Phaser.Tilemaps.TilemapLayer} terrainColliderLayer - The terrain layer used for collision checks.
+     * @param {Object} terrainColliderLayer - The terrain layer used for collision checks.
      */
     setTerrainColliders(terrainColliderLayer) {
         this.terrainColliderLayer = terrainColliderLayer;
@@ -177,6 +178,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
             this.body.setAllowGravity(false);
             this.body.setImmovable(true);
             this.body.checkCollision.none = true;
+            this.deadCount++;
         }
     }
 }

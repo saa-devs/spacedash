@@ -105,36 +105,45 @@ h1 {
 
 /* Circular container around each image */
 .character-label {
-    display: inline-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 120px;
     width: 120px;
     border-radius: 15px;
     background-color: #191f2c;
-    border: 2px solid transparent; /* Initially transparent */
-    padding: 5px 5px 20px;
+    border: 2px solid transparent;
+    padding: 5px 0 20px 0;
     cursor: pointer;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.6s ease, box-shadow 0.6s ease;
+    overflow: hidden; /* Ensures the image does not expand outside the container */
 }
 
 /* Default style for images */
 .character-image {
+    width: 90%;
+    height: 90%;
+    display: block;
+    margin: 0;
+    padding: 0;
     object-fit: contain;
     image-rendering: pixelated;
-    transition: transform 0.3s ease;
+    image-rendering: crisp-edges;
+    transition: transform 0.3s ease; /* Smooth scaling effect */
 }
 
 /* Scale up the image on hover */
 .character-label:hover .character-image {
-    transform: scale(1.2);
+    transform: scale(1.25); /* Increase image size within the container */
 }
 
-/* Change border color of label when the associated radio input is checked */
-.character-radio:checked + .character-label {
-    border-color: #41dba0; /* Blue border for selected state */
-    box-shadow: 0 0 5px rgba(65, 178, 135, 0.5); /* Optional glow effect */
+.character-label:has(input:checked) {
+    border-color: #41dba0;
+    box-shadow: 0 0 5px rgba(65, 178, 135, 0.5);
 }
 
-#action-menu {
+
+#action-menu, #level-menu {
     display: flex;
     flex-direction: column;
     row-gap: 10px;
@@ -169,7 +178,8 @@ h1 {
 
 /* BUTTONS */
 #login-button, #register-button, #play-button,
-#stats-button, #leaderboard-button, #logout-button {
+#stats-button, #leaderboard-button, #logout-button,
+#levelone-button, #leveltwo-button, #back-button {
     font-size: 14px;
     background-color: #41dba0;
     border-radius: 7px;
@@ -189,27 +199,30 @@ h1 {
     background-color: #b2ffde; /* Darker green on hover */
 }
 
-#register-button, #stats-button, #leaderboard-button {
+#register-button, #stats-button, #leaderboard-button,
+#levelone-button, #leveltwo-button {
     background-color: #ffc34b;
 }
 
-#register-button:hover, #stats-button:hover, #leaderboard-button:hover {
+#register-button:hover, #stats-button:hover, #leaderboard-button:hover,
+#levelone-button:hover, #leveltwo-button:hover {
     background-color: #ffd37d;
 }
 
-#register-button:active, #stats-button:active, #leaderboard-button:active {
+#register-button:active, #stats-button:active, #leaderboard-button:active,
+#levelone-button:active, #leveltwo-button:active {
     background-color: #ffe9c3;
 }
 
-#logout-button {
+#logout-button, #back-button {
     background-color: #e13960;
 }
 
-#logout-button:hover {
+#logout-button:hover, #back-button:hover {
     background-color: #f65279;
 }
 
-#logout-button:active {
+#logout-button:active, #back-button:active {
     background-color: #ffbecc;
 }
 

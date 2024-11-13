@@ -63,9 +63,10 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
             s: Phaser.Input.Keyboard.KeyCodes.S
         });
 
-        this.light = this.scene.lights.addLight(this.x, this.y, 300)
+        this.light = this.scene.lights.addLight(this.x, this.y, 350)
             .setColor(0xd9fffb)
-            .setIntensity(0.7);
+            .setIntensity(1);
+        this.scene.lights.enable().setAmbientColor(0x504978);
 
         // Set up shooting with Enter key
         this.scene.input.keyboard.on('keydown-ENTER', () => {
@@ -117,7 +118,8 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
         const { a, d, w, s } = this.keys;
         const onFloor = this.body.onFloor();
 
-        const lightOffset = this.lastDirection === Phaser.Physics.Arcade.FACING_RIGHT ? 100 : -100;
+        this.x > 675 ? this.setPipeline('Light2D') : this.resetPipeline();
+        const lightOffset = this.lastDirection === Phaser.Physics.Arcade.FACING_RIGHT ? 60 : -60;
         this.light.setPosition(this.x + lightOffset, this.y - 80);
 
         if (a.isDown) {
