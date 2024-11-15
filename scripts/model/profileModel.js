@@ -29,6 +29,24 @@ async function getUserInfo(username) {
     }
 }
 
+async function getPlayerStats(username) {
+    const apiUrl = `https://sed83q2b55.execute-api.us-east-1.amazonaws.com/dev/getPlayerStatsDDB?username=${username}`;
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: "GET", headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (!response.ok) {
+            console.log(`Error: ${response.statusText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Failed to retrieve player stats:", error);
+    }
+}
+
 async function updateCharacter(username, colour) {
 
     const apiUrl = `https://rctm78l2ab.execute-api.us-east-1.amazonaws.com/dev/updateCharacterDDB?username=${username}&colour=${colour}`;
@@ -40,17 +58,43 @@ async function updateCharacter(username, colour) {
             }
         });
         if (!response.ok) {
-            console.log('An error has occurred')
+            console.log(`Error: ${response.statusText}`);
         }
         const data = await response.json();
-        console.log('Update successful:', data);
+        console.log('Character update successful');
         return data;
 
     } catch (error) {
-        console.error('Failed to update colour:', error);
+        console.error('Failed to update character:', error);
+        throw error;
+    }
+}
+
+async function updatePlayerStats(username, coinsCollected, enemiesDefeated, levelsCompleted, fastestTimes) {
+    const params = new URLSearchParams({
+        username,
+        coinsCollected: coinsCollected.toString(),
+        enemiesDefeated: enemiesDefeated.toString(),
+        levelsCompleted: JSON.stringify(levelsCompleted), // Convert array to JSON string
+        fastestTimes: JSON.stringify(fastestTimes), // Convert object to JSON string
+    });
+    const apiUrl = `https://sruclfpn37.execute-api.us-east-1.amazonaws.com/dev/updatePlayerStatsDDB?${params.toString()}`;
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            console.log(`Error: ${response.statusText}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Error calling API Gateway:", error);
         throw error;
     }
 }
 
 
-module.exports = {getUserInfo, getCharacterURLs, updateCharacter};
+export {getUserInfo, getCharacterURLs, updateCharacter, updatePlayerStats, getPlayerStats};

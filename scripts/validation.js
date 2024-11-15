@@ -4,8 +4,6 @@
  * This file provides functions to validate user input
  */
 
-let errorMsgText = '';
-
 /**
  * Checks if a username is valid based on a regex pattern.
  * A valid username must be 3 to 10 characters long and contain only letters and numbers.
@@ -41,4 +39,4 @@ function matchingPassword(password, confirmPassword) {
     return password === confirmPassword;
 }
 
-module.exports = {validUsername, validPassword, matchingPassword};
+export {validUsername, validPassword, matchingPassword};

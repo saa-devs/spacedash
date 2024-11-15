@@ -39,4 +39,4 @@ function generateBackButton() {
     return backButton;
 }
 
-export { chooseLevelUI, generateLevelButtons, levelOneButton, levelTwoButton, backButton };
+export {chooseLevelUI, generateLevelButtons, levelOneButton, levelTwoButton, backButton};

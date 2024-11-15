@@ -86,6 +86,44 @@ h1 {
 }
 
 /* PROFILE PAGE */
+#loading-indicator {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed; /* Keeps it in one place, even when scrolling */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#loading-indicator p {
+    color: #c8cad9;
+    text-align: center;
+    width: 1000px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #87ffcf;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 #profile-ui {
     display: flex;
     flex-direction: column;
@@ -128,7 +166,6 @@ h1 {
     padding: 0;
     object-fit: contain;
     image-rendering: pixelated;
-    image-rendering: crisp-edges;
     transition: transform 0.3s ease; /* Smooth scaling effect */
 }
 
@@ -176,10 +213,38 @@ h1 {
     color: #5a698a;
 }
 
+/* GAME OVER PAGE */
+#gameover-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 40px;
+    font-weight: 400;
+}
+
+#gameover-heading {
+    font-size: 35px;
+    font-weight: 400;
+}
+
+#gameover-msg, #game-stats {
+    font-size: 16px;
+    color: #eae6e6;
+}
+
+#game-stats {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 10px;
+}
+
 /* BUTTONS */
 #login-button, #register-button, #play-button,
 #stats-button, #leaderboard-button, #logout-button,
-#levelone-button, #leveltwo-button, #back-button {
+#levelone-button, #leveltwo-button, #back-button, #continue-button {
     font-size: 14px;
     background-color: #41dba0;
     border-radius: 7px;
@@ -200,17 +265,17 @@ h1 {
 }
 
 #register-button, #stats-button, #leaderboard-button,
-#levelone-button, #leveltwo-button {
+#levelone-button, #leveltwo-button, #continue-button {
     background-color: #ffc34b;
 }
 
 #register-button:hover, #stats-button:hover, #leaderboard-button:hover,
-#levelone-button:hover, #leveltwo-button:hover {
+#levelone-button:hover, #leveltwo-button:hover, #continue-button:hover {
     background-color: #ffd37d;
 }
 
 #register-button:active, #stats-button:active, #leaderboard-button:active,
-#levelone-button:active, #leveltwo-button:active {
+#levelone-button:active, #leveltwo-button:active, #continue-button:active {
     background-color: #ffe9c3;
 }
 

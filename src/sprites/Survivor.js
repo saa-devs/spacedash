@@ -194,6 +194,7 @@ class Survivor extends Phaser.Physics.Arcade.Sprite {
         this.healthBar.takeDamage(this.currentHealth);
 
         if (this.currentHealth <= 0) {
+            this.setVelocityX(0);
             this.hasBeenHit = true;
             this.isDead = true;
 

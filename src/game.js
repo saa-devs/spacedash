@@ -32,6 +32,7 @@ const sharedConfig = {
     scaleFactor: 3.5,
     debug: false,
     level: null,
+    player: null,
 }
 
 /** @constant {Array<Phaser.Scene>} Scenes - An array of scene classes used in the game. */
@@ -67,12 +68,9 @@ const initScenes = () => Scenes.map(createScene);
 
 /**
  * Creates a fresh Phaser configuration object to ensure no lingering references.
- * @param {number} level - The selected level for the game
  * @returns {object} - The Phaser game configuration
  */
-function createConfig(level) {
-    sharedConfig.level = level;
-
+function createConfig() {
     return {
         type: Phaser.WEBGL,
         width: WIDTH,
@@ -95,13 +93,16 @@ function createConfig(level) {
  * If a game instance already exists, it destroys the old instance before creating a new one.
  * @function
  */
-function loadGame(level) {
+function loadGame(level, player) {
     if (gameInstance) {
         gameInstance.destroy(true);
         gameInstance = null;
     }
+    const config = createConfig(level, player);
+    sharedConfig.level = level;
+    sharedConfig.player = player;
 
-    const config = createConfig(level); // Generate a fresh config object each time
+    // Generate a fresh config object each time
     gameInstance = new Phaser.Game(config);
 }
 

@@ -9,7 +9,7 @@ import Collectables from '../groups/Collectables';
 import Enemies from '../groups/Enemies';
 import ScoreBoard from '../gamebar/ScoreBoard';
 import EventEmitter from '../events/Emitter';
-import gameWon from "../../scripts/view/gameOverView";
+import {createGameOver} from "../../scripts/controller/gameOverController";
 
 /**
  * @class Play
@@ -54,6 +54,7 @@ class Play extends Phaser.Scene {
             enemyCount
         } = this.createEnemies(layers.enemySpawnsLayer, offsetX, offsetY, layers.terrainLayer, survivor);
 
+        this.enemies = enemies;
         this.enemyCount = enemyCount;
 
         this.createPlayerColliders(survivor, {colliders: {terrainLayer: layers.terrainLayer}});
@@ -88,8 +89,9 @@ class Play extends Phaser.Scene {
 
     /** Registers a custom game event that logs a message when triggered. */
     createGameEvent() {
-        EventEmitter.on('PLAYER_LOOSE', () => {
-            console.log('PLAYER_LOOSE');
+        EventEmitter.off('PLAYER_LOOSE');
+        EventEmitter.on('PLAYER_LOOSE', async () => {
+            await this.gameLost(this.enemies);
         });
     }
 
@@ -280,26 +282,45 @@ class Play extends Phaser.Scene {
         const endY = end.y * this.scaleFactor + offsetY;
 
         const endOfLevel = this.physics.add.sprite(endX, endY, 'end')
-            .setSize(5, 200)
+            .setSize(5, 1000)
             .setGravity(0, 0)
             .setOrigin(0.5, 1);
 
-        const overlap = this.physics.add.overlap(survivor, endOfLevel, () => {
+        this.gameWon(survivor, enemies, endOfLevel);
+    }
+
+    gameWon(survivor, enemies, endOfLevel) {
+        const level = this.config.level;
+        const overlap = this.physics.add.overlap(survivor, endOfLevel, async () => {
             let totalDefeatedEnemies = 0;
             enemies.getChildren().forEach(enemy => {
                 totalDefeatedEnemies += enemy.deadCount;
             });
 
             if (totalDefeatedEnemies === this.enemyCount) {
+                console.log("You have won!");
+                this.scene.stop('play');
+                this.game.canvas.parentNode.removeChild(this.game.canvas);
+
                 const endTime = this.time.now; // Capture the end time
                 const timeTaken = ((endTime - this.startTime) / 1000).toFixed(1); // Calculate time in seconds
-                console.log("You have won!");
-                console.log(`Time taken: ${timeTaken}s`);
-                console.log(`You scored: ${this.score} points`);
-                gameWon();
                 overlap.destroy();
+                await createGameOver(true, this.score, totalDefeatedEnemies, level, timeTaken);
             }
         });
+    }
+
+    async gameLost(enemies) {
+        const level = this.config.level;
+        console.log('You have lost the game');
+        this.scene.stop('play');
+        this.game.canvas.parentNode.removeChild(this.game.canvas);
+
+        let totalDefeatedEnemies = 0;
+        enemies.getChildren().forEach(enemy => {
+            totalDefeatedEnemies += enemy.deadCount;
+        });
+        await createGameOver(false, this.score, totalDefeatedEnemies, level, 0);
     }
 }
 

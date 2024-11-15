@@ -31,12 +31,12 @@ function createProfile() {
  *
  * @function generateSelectCharacterHTML
  * @param {HTMLElement} profileUI - The profile ScoreBoard container to append character selection HTML.
+ * @param username
  */
-function generateSelectCharacterHTML(profileUI) {
-    const loggedInUser = sessionStorage.getItem('username');
+function generateSelectCharacterHTML(profileUI, username) {
     profileUI.innerHTML = `
     <div id="select-character-div">
-        <h2 id="character-heading">Hello ${loggedInUser}, select your character</h2>
+        <h2 id="character-heading">Hello ${username}, select your character</h2>
         <div id="sprite-select"></div>
     </div>
     `;
@@ -113,7 +113,7 @@ function generateLogoutButton() {
     return logoutButton;
 }
 
-module.exports = {
+export {
     profileUI,
     generateSelectCharacterHTML,
     generateButtons,

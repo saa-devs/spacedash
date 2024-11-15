@@ -5,7 +5,6 @@
  */
 
 const {checkCredentials, registerUser} = require('../aws/dynamodb');
-
 const express = require('express'); // Import web server
 const path = require('path');
 const bodyParser = require('body-parser'); // To read incoming requests in JSON format

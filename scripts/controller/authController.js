@@ -5,10 +5,10 @@
  * according to user input.
  */
 
-const {registerForm, loginLink} = require('../view/authView');
-const {validUsername, validPassword, matchingPassword} = require('../validation');
-const {checkCredentials, registerUser} = require('/scripts/model/userModel');
-const {loadProfile} = require('./profileController');
+import {registerForm, loginLink} from '../view/authView';
+import {validUsername, validPassword, matchingPassword} from '../validation';
+import {checkCredentials, registerUser} from '/scripts/model/userModel';
+import {loadProfile} from './profileController';
 
 const authUI = document.getElementById('auth-ui');
 const loginForm = document.getElementById('login-form');
@@ -40,10 +40,10 @@ loginForm.addEventListener('submit', async (event) => {
     const data = await response.json();
 
     if (response.ok) {
+        const newUser = false;
         authUI.style.display = 'none';
-        sessionStorage.setItem('username', username);
         profileUI.style.display = 'flex';
-        await loadProfile(username);
+        await loadProfile(username, newUser);
     } else if (response.status === 401) {
         errorMsg.innerText = data.message;
     }
@@ -65,20 +65,23 @@ registerForm.addEventListener('submit', async (event) => {
     const createUsername = document.getElementById('create-username').value;
     const createPassword = document.getElementById('create-password').value;
     const confirmPassword = document.getElementById('confirm-password').value;
-    const characterColour = 'green';
+    const characterColour = 'blue';
 
     if (validRegisterDetails(createUsername, createPassword, confirmPassword)) {
         const response = await registerUser(createUsername, createPassword, characterColour);
         const data = await response.json();
 
         if (response.ok) {
+            const newUser = true;
             errorMsg.innerText = '';
             authUI.style.display = 'none';
-            await loadProfile(createUsername);
+            profileUI.style.display = 'flex';
+            await loadProfile(createUsername, newUser);
         } else if (response.status === 409) {
             errorMsg.innerText = data.message;
         }
     }
+
 });
 
 /**

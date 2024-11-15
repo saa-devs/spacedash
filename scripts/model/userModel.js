@@ -46,4 +46,4 @@ async function registerUser(createUsername, createPassword, characterColour) {
     }
 }
 
-module.exports = {checkCredentials, registerUser};
+export {checkCredentials, registerUser};

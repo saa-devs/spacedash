@@ -48,4 +48,4 @@ function createLoginLink() {
     return loginLink;
 }
 
-module.exports = {registerForm, loginLink};
+export {registerForm, loginLink};
