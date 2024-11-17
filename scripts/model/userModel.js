@@ -16,7 +16,7 @@
  */
 async function checkCredentials(username, password) {
     try {
-        return await fetch(`http://localhost:5100/login`, {
+        return await fetch(`http://spacedash-env.eba-gppcki27.us-east-1.elasticbeanstalk.com/login`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({username, password})
@@ -38,7 +38,7 @@ async function checkCredentials(username, password) {
  */
 async function registerUser(createUsername, createPassword, characterColour) {
     try {
-        return await fetch('http://localhost:5100/register', {
+        return await fetch('http://spacedash-env.eba-gppcki27.us-east-1.elasticbeanstalk.com/register', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({createUsername, createPassword, characterColour})
