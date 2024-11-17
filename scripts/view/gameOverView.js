@@ -48,9 +48,10 @@ function createGameOverDiv() {
  * @param {boolean} gameWon - Whether the player won the game.
  * @param {number} coinsCollected - The number of coins collected during the game.
  * @param {number} enemiesDefeated - The number of enemies defeated during the game.
+ * @param {number} timeTaken - Time taken to complete the level
  * @returns {void}
  */
-function displayGameStats(gameWon, coinsCollected, enemiesDefeated) {
+function displayGameStats(gameWon, coinsCollected, enemiesDefeated, timeTaken) {
     // Clear existing content
     gameOverDiv.innerHTML = '';
 
@@ -71,6 +72,13 @@ function displayGameStats(gameWon, coinsCollected, enemiesDefeated) {
     <p id="coins-collected">Coins collected: ${coinsCollected}</p>
     <p id="enemies-defeated">Enemies defeated: ${enemiesDefeated}</p>
     `;
+
+    if (gameWon) {
+        const timeTakenElement = document.createElement('p');
+        timeTakenElement.id = 'time-taken-s';
+        timeTakenElement.innerText = `Time taken: ${timeTaken} seconds`;
+        gameStats.appendChild(timeTakenElement);
+    }
 
     // Append elements to gameOverDiv
     gameOverDiv.appendChild(gameOverHeading);

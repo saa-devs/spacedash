@@ -34,7 +34,8 @@ class Play extends Phaser.Scene {
 
     /** Sets up the map, player, enemies, collectables, and interactions when the scene is created. */
     create() {
-        this.startTime = this.time.now;
+        this.startTime = performance.now();
+        console.log(this.startTime);
         const map = this.createMap().map;
         const tileset = this.createMap().tileset;
         const layers = this.createLayers(map, tileset);
@@ -49,7 +50,7 @@ class Play extends Phaser.Scene {
         const offsetY = (this.scale.height - scaledLayerHeight) / 2;
 
         const survivor = this.createPlayer(layers, levelBounds.start, offsetX, offsetY);
-        const { enemies, enemyCount } = this.createEnemies(
+        const {enemies, enemyCount} = this.createEnemies(
             layers.enemySpawnsLayer,
             offsetX,
             offsetY,
@@ -60,11 +61,11 @@ class Play extends Phaser.Scene {
         this.enemies = enemies;
         this.enemyCount = enemyCount;
 
-        this.createPlayerColliders(survivor, { colliders: { terrainLayer: layers.terrainLayer } });
+        this.createPlayerColliders(survivor, {colliders: {terrainLayer: layers.terrainLayer}});
         this.createPlayerOverlap(survivor, collectables);
-        this.createEnemyColliders(enemies, { colliders: { terrainLayer: layers.terrainLayer, survivor } });
+        this.createEnemyColliders(enemies, {colliders: {terrainLayer: layers.terrainLayer, survivor}});
         this.createProjectilesCollider(survivor.projectiles, {
-            colliders: { terrainLayer: layers.terrainLayer, survivor },
+            colliders: {terrainLayer: layers.terrainLayer, survivor},
         });
 
         ['backgroundLayer', 'backgroundEntryLayer', 'terrainLayer', 'foregroundLayer', 'decorationLayer'].forEach(layer => {
@@ -101,14 +102,14 @@ class Play extends Phaser.Scene {
         let map = null;
         let tileset = null;
         if (this.config.level === 1) {
-            map = this.make.tilemap({ key: 'level-one' });
+            map = this.make.tilemap({key: 'level-one'});
         } else if (this.config.level === 2) {
-            map = this.make.tilemap({ key: 'level-two' });
+            map = this.make.tilemap({key: 'level-two'});
         }
         if (map) {
             tileset = map.addTilesetImage('spacetileset', 'tileset');
         }
-        return { map, tileset };
+        return {map, tileset};
     }
 
     /**
@@ -199,15 +200,13 @@ class Play extends Phaser.Scene {
             enemies.add(enemy);
             enemyCount++;
         });
-        return { enemies, enemyCount };
+        return {enemies, enemyCount};
     }
 
     /**
      * Sets up collision detection for the player with specified colliders.
-     * @param {Survivor} survivor - The player character.
-     * @param {object} colliders - Colliders to interact with.
      */
-    createPlayerColliders(survivor, { colliders }) {
+    createPlayerColliders(survivor, {colliders}) {
         survivor.addCollider(colliders.terrainLayer);
     }
 
@@ -222,10 +221,8 @@ class Play extends Phaser.Scene {
 
     /**
      * Sets up colliders for enemies with specified layers and objects.
-     * @param {Enemies} enemies - Group of enemies.
-     * @param {object} colliders - Colliders to interact with.
      */
-    createEnemyColliders(enemies, { colliders }) {
+    createEnemyColliders(enemies, {colliders}) {
         enemies
             .addCollider(colliders.terrainLayer)
             .addCollider(colliders.survivor, this.onSurvivorCollision.bind(this))
@@ -237,7 +234,7 @@ class Play extends Phaser.Scene {
      * @param {Phaser.GameObjects.Group} projectiles - Group of projectiles.
      * @param {object} colliders - Colliders to interact with.
      */
-    createProjectilesCollider(projectiles, { colliders }) {
+    createProjectilesCollider(projectiles, {colliders}) {
         this.physics.add.collider(projectiles, colliders.terrainLayer, projectile => {
             if (projectile instanceof Shoot) {
                 projectile.handleCollision();
@@ -268,7 +265,7 @@ class Play extends Phaser.Scene {
      * @param {object} layers - Game layers.
      */
     setupCamera(survivor, layers) {
-        const { height } = this.config;
+        const {height} = this.config;
         const scaledLayerWidth = layers.terrainLayer.width * this.scaleFactor;
         const scaledLayerHeight = layers.terrainLayer.height * this.scaleFactor;
 
@@ -317,10 +314,11 @@ class Play extends Phaser.Scene {
                 this.scene.stop('play');
                 this.game.canvas.parentNode.removeChild(this.game.canvas);
 
-                const endTime = this.time.now;
+                const endTime = performance.now();
                 const timeTaken = ((endTime - this.startTime) / 1000).toFixed(1);
+                console.log(timeTaken);
                 overlap.destroy();
-                await createGameOver(true, this.score, totalDefeatedEnemies, level, timeTaken);
+                await createGameOver(true, this.score, totalDefeatedEnemies, level, timeTaken.toString());
             }
         });
     }

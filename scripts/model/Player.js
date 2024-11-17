@@ -48,6 +48,14 @@ ${timesTakenFormatted}`;
     }
 
     /**
+     * Retrieves the selected character of the player.
+     * @returns {string} The character of the player.
+     */
+    getCharacter() {
+        return this.character;
+    }
+
+    /**
      * Retrieves the spritesheet for character chosen by the player.
      * @returns {string} spritesheet - Spritesheet used by Phaser.js.
      */

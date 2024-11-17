@@ -320,6 +320,11 @@ h1 {
     row-gap: 35px;
 }
 
+#tables-div {
+    display: flex;
+    column-gap: 30px;
+}
+
 #leaderboard-heading {
     color: #ffc34b;
     font-size: 15px;

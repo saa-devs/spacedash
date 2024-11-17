@@ -9,6 +9,7 @@
 const leaderboardUI = createLeaderboardUI();
 const leaderboardHeading = createLeaderboardHeading();
 const backButton = generateBackButton();
+const tablesDiv = createTablesDiv();
 
 /**
  * Creates the main leaderboard UI container.
@@ -20,6 +21,15 @@ function createLeaderboardUI() {
     const leaderboardUI = document.createElement('div');
     leaderboardUI.id = 'leaderboard-ui';
     return leaderboardUI;
+}
+
+function createTablesDiv() {
+    let tablesDiv = document.getElementById('tables-div');
+    if (!tablesDiv) {
+        tablesDiv = document.createElement('div');
+        tablesDiv.id = 'tables-div';
+    }
+    return tablesDiv;
 }
 
 /**
@@ -72,7 +82,8 @@ function createCoinsCollectedLeaderboard(leaderboardStats) {
 
     coinsTableContainer.appendChild(coinsTableHeading);
     coinsTableContainer.appendChild(coinsTable);
-    leaderboardUI.appendChild(coinsTableContainer);
+    const tablesDiv = document.getElementById('tables-div');
+    tablesDiv.appendChild(coinsTableContainer);
 }
 
 /**
@@ -112,55 +123,8 @@ function createEnemiesDefeatedLeaderboard(leaderboardStats) {
 
     enemiesTableContainer.appendChild(enemiesTableHeading);
     enemiesTableContainer.appendChild(enemiesTable);
-    leaderboardUI.appendChild(enemiesTableContainer);
-}
-
-/**
- * Creates the leaderboard table for the fastest times in each level.
- *
- * @function createFastestTimesLeaderboard
- * @param {Object} leaderboardStats - The leaderboard data containing fastest times stats.
- * @returns {void}
- */
-function createFastestTimesLeaderboard(leaderboardStats) {
-    const fastestTimesContainer = document.createElement('div');
-    fastestTimesContainer.id = 'fastesttimes-container';
-
-    const fastestTimesData = leaderboardStats.fastestTimes;
-
-    Object.keys(fastestTimesData).forEach((level) => {
-        const levelTableContainer = document.createElement('div');
-        levelTableContainer.id = `level-${level}-container`;
-        const levelTable = document.createElement('table');
-        levelTable.id = `level-${level}-table`;
-        levelTable.className = 'level-table';
-        levelTable.innerHTML = `
-        <thead>
-            <tr>
-                <th colspan="3">Level ${level}</th>
-            </tr>
-            <tr>
-                <th>Rank</th>
-                <th>Player</th>
-                <th>Time (s)</th>
-            </tr>
-        </thead>
-        <tbody>
-        ${fastestTimesData[level]
-            .map(
-                (player, index) => `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${player.username}</td>
-                    <td>${player.time}</td>
-                </tr>`
-            )
-            .join('')}
-        </tbody>`;
-        levelTableContainer.appendChild(levelTable);
-        fastestTimesContainer.appendChild(levelTableContainer);
-    });
-    leaderboardUI.appendChild(fastestTimesContainer);
+    const tablesDiv = document.getElementById('tables-div');
+    tablesDiv.appendChild(enemiesTableContainer);
 }
 
 /**
@@ -181,6 +145,6 @@ export {
     leaderboardHeading,
     createCoinsCollectedLeaderboard,
     createEnemiesDefeatedLeaderboard,
-    createFastestTimesLeaderboard,
-    backButton
+    backButton,
+    tablesDiv
 };

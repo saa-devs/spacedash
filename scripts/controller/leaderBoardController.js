@@ -11,11 +11,10 @@ import {
     leaderboardHeading,
     createCoinsCollectedLeaderboard,
     createEnemiesDefeatedLeaderboard,
-    createFastestTimesLeaderboard,
-    backButton
+    backButton,
+    tablesDiv
 } from '../view/leaderboardView.js';
 import {getLeaderboardStats} from "../model/leaderboardModel";
-import {statsUI} from "../view/statsView";
 import {profileUI} from "../view/profileView";
 
 const gameDiv = document.getElementById('game-div');
@@ -39,12 +38,17 @@ async function createLeaderboard() {
         gameDiv.appendChild(leaderboardUI);
     }
 
+    tablesDiv.innerHTML = '';
+    leaderboardUI.appendChild(tablesDiv);
     const leaderboardStats = await getLeaderboardStats();
+
+    if (!leaderboardUI.contains(tablesDiv)) {
+        leaderboardUI.appendChild(tablesDiv);
+    }
 
     // Populate leaderboards with stats
     createCoinsCollectedLeaderboard(leaderboardStats);
     createEnemiesDefeatedLeaderboard(leaderboardStats);
-    createFastestTimesLeaderboard(leaderboardStats);
 
     leaderboardUI.appendChild(backButton);
     backButtonSetup(backButton);

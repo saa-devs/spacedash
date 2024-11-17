@@ -1,4 +1,11 @@
 /**
+ * REFERENCES: All credits for the spritesheet go to the original creator; I do not claim ownership.
+ * E. Svahn. “Asset Pack”. 2D Pixel Space Horror Pack by Erik Svahn.
+ * Accessed: 10 October, 2024. [Online].
+ * Available: https://eriksvahn.itch.io/2d-pixel-space-horror-pack
+ */
+
+/**
  * @fileoverview This file defines the Init scene for the Phaser game.
  * The Init scene is responsible for loading game assets such as images, spritesheets,
  * and tilemap data, and transitioning to the 'play' scene once loading is complete.

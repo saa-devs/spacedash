@@ -5,13 +5,11 @@
  *
  * @async
  * @function getLeaderboardStats
- * @param {string} type - The type of leaderboard data to retrieve (e.g., "coins", "enemies", "times").
- * @param {string} apiKey - The API key for authentication and authorisation.
  * @returns {Promise<Object|undefined>} A promise resolving to the leaderboard statistics as an object, or `undefined` if an error occurs.
  */
-async function getLeaderboardStats(type, apiKey) {
+async function getLeaderboardStats() {
     // Construct the API URL with query parameters
-    const apiUrl = `https://hkn1o1jgyl.execute-api.us-east-1.amazonaws.com/dev/getLeaderboardStatsDDB?type=${type}&apiKey=${apiKey}`;
+    const apiUrl = `https://hkn1o1jgyl.execute-api.us-east-1.amazonaws.com/dev/getLeaderboardStatsDDB`;
     try {
         // Make the GET request
         const response = await fetch(apiUrl);

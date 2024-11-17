@@ -23,17 +23,17 @@ const profileUI = document.getElementById('profile-ui');
  * @param {number} coinsCollected - Number of coins collected during the game.
  * @param {number} enemiesDefeated - Number of enemies defeated during the game.
  * @param {number} level - The level completed by the player.
- * @param {number} timeTaken - Time taken to complete the level.
+ * @param {string} timeTaken - Time taken to complete the level.
  * @returns {Promise<void>} No return value.
  */
 async function createGameOver(gameWon, coinsCollected, enemiesDefeated, level, timeTaken) {
     createGameOverUI();
-    displayGameStats(gameWon, coinsCollected, enemiesDefeated);
+    displayGameStats(gameWon, coinsCollected, enemiesDefeated, timeTaken);
     continueButtonSetup(continueButton);
     gameOverDiv.style.display = 'flex';
 
     if (gameWon) {
-        await updateGameStats(player, coinsCollected, enemiesDefeated, level, timeTaken);
+        await updateGameStats(player, coinsCollected, enemiesDefeated, level, Number(timeTaken));
     }
 }
 
@@ -83,7 +83,7 @@ async function updateGameStats(player, coinsCollected, enemiesDefeated, level, t
     player.setCoinsCollected(player.getCoinsCollected() + coinsCollected);
     player.setEnemies(player.getEnemiesDefeated() + enemiesDefeated);
     player.appendLevels(level);
-    player.appendFastestTimes(level, timeTaken);
+    player.appendFastestTimes(level.toString(), timeTaken);
 
     await updatePlayerStats(
         player.getUsername(),

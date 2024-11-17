@@ -1,4 +1,11 @@
 /**
+ * REFERENCES: All credits for the spritesheet go to the original creator; I do not claim ownership.
+ * E. Svahn. “Asset Pack”. 2D Pixel Space Horror Pack by Erik Svahn.
+ * Accessed: 10 October, 2024. [Online].
+ * Available: https://eriksvahn.itch.io/2d-pixel-space-horror-pack
+ */
+
+/**
  * @fileoverview Defines and initialises animations for the Survivor character.
  * This file configures various animations for different states such as idle, walk, jump, and attack.
  */

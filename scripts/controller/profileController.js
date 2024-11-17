@@ -10,9 +10,9 @@ import {
     getCharacterURLs,
     updateCharacter,
     updatePlayerStats,
-    getPlayerStats,
     getPlayerSpriteSheet
 } from '../model/profileModel';
+import {getPlayerStats} from '../model/statsModel';
 import {
     profileUI,
     generateSelectCharacterHTML,
@@ -45,6 +45,8 @@ async function loadProfile(username, newUser) {
 
     try {
         if (newUser) { // Initialises player stats for a new user
+            const spriteSheet = await getPlayerSpriteSheet('blue');
+            player.setSpritesheet(spriteSheet);
             await updatePlayerStats(
                 username, 0,
                 0,
@@ -58,12 +60,16 @@ async function loadProfile(username, newUser) {
         if (userInfo) {
             player.setUsername(userInfo.username);
             player.setCharacter(userInfo.character);
+            const spriteSheet = await getPlayerSpriteSheet(userInfo.character);
+            player.setSpritesheet(spriteSheet);
+            console.log(`Player: ${player.getUsername()}\nSelected character: ${player.getCharacter()}`);
         } else {
             console.error("User info could not be retrieved.");
         }
 
         if (playerStats?.data) {
             player.setAllStats(playerStats.data);
+            console.log(player.getPlayerInfo());
         } else {
             console.error("Player stats could not be retrieved.");
         }
@@ -84,7 +90,7 @@ async function loadProfile(username, newUser) {
 }
 
 /**
- * Fetches and caches character URLs from S3 or local storage.
+ * Fetches and caches character URLs from S3.
  *
  * @async
  * @function storeCharacterURLs
@@ -100,7 +106,7 @@ async function storeCharacterURLs() {
 }
 
 /**
- * Inserts character selection options into the profile scoreboard, using cached URLs.
+ * Inserts character selection options into the user profile.
  *
  * @function insertCharacterLabels
  * @param {Object} characterURLs - The URLs of character images.
@@ -152,6 +158,7 @@ function selectCharacterSetup() {
                 const spriteSheet = await getPlayerSpriteSheet(radio.value);
                 player.setCharacter(radio.value);
                 player.setSpritesheet(spriteSheet);
+                console.log(`Player: ${player.getUsername()}\nSelected character: ${player.getCharacter()}`);
             } catch (error) {
                 console.error('Error loading profile:', error);
             } finally {
