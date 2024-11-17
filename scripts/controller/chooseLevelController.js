@@ -12,10 +12,12 @@ import {
     levelOneButton,
     levelTwoButton,
     backButton,
+    instructionsDiv
 } from '../view/chooseLevelView';
 import {profileUI} from "../view/profileView";
 import {loadGame, destroyGame} from '../../src/game';
 import {player} from './profileController';
+import {leaderboardHeading} from "../view/leaderboardView";
 
 const gameDiv = document.getElementById('game-div');
 
@@ -28,6 +30,7 @@ const gameDiv = document.getElementById('game-div');
 function createChooseLevel() {
     gameDiv.appendChild(chooseLevelUI);
     chooseLevelUI.style.display = 'flex';
+    chooseLevelUI.appendChild(instructionsDiv);
 
     generateLevelButtons(levelOneButton, levelTwoButton, backButton);
     backButtonSetup(backButton);

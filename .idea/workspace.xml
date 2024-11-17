@@ -8,11 +8,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b9651be2-136e-4a86-9eef-e7920a38b8aa" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/APIs/gamejolt/gamejoltConfig.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/game-assets/tileset/spacetileset-levelone.json" beforeDir="false" afterPath="$PROJECT_DIR$/game-assets/tileset/spacetileset-levelone.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game-assets/tileset/spacetileset-leveltwo.json" beforeDir="false" afterPath="$PROJECT_DIR$/game-assets/tileset/spacetileset-leveltwo.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/controller/authController.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/controller/authController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/model/userModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/model/userModel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/controller/chooseLevelController.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/controller/chooseLevelController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/view/authView.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/view/authView.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/view/chooseLevelView.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/view/chooseLevelView.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,7 +126,7 @@
       <workItem from="1731571299400" duration="44498000" />
       <workItem from="1731691097741" duration="26267000" />
       <workItem from="1731761996674" duration="35033000" />
-      <workItem from="1731846765316" duration="717000" />
+      <workItem from="1731846765316" duration="2820000" />
     </task>
     <servers />
   </component>

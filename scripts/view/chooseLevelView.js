@@ -10,6 +10,7 @@ const chooseLevelUI = createChooseLevelDiv();
 const levelOneButton = generateLevelOneButton();
 const levelTwoButton = generateLevelTwoButton();
 const backButton = generateBackButton();
+const instructionsDiv = createGameInstructions();
 
 /**
  * Creates the main container for the level selection UI.
@@ -21,6 +22,15 @@ function createChooseLevelDiv() {
     const chooseLevelUI = document.createElement('div');
     chooseLevelUI.id = 'chooselevel-ui';
     return chooseLevelUI;
+}
+
+function createGameInstructions() {
+    const instructionsDiv = document.createElement('div');
+    instructionsDiv.id = 'instructions-div';
+    instructionsDiv.innerHTML = `
+    <p>WASD to move, jump and crouch. Enter to shoot.</p>
+    `;
+    return instructionsDiv;
 }
 
 /**
@@ -80,4 +90,4 @@ function generateBackButton() {
     return backButton;
 }
 
-export {chooseLevelUI, generateLevelButtons, levelOneButton, levelTwoButton, backButton};
+export {chooseLevelUI, generateLevelButtons, levelOneButton, levelTwoButton, backButton, instructionsDiv};

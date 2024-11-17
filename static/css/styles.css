@@ -194,6 +194,18 @@ h1 {
     padding: 20px 0;
 }
 
+#chooselevel-ui {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#instructions-div {
+    color: #41dba0;
+    text-align: center;
+    padding: 50px 0;
+}
+
 /* INPUT FIELDS */
 #username, #password, #create-username, #create-password, #confirm-password {
     font-size: 14px;

@@ -53,4 +53,4 @@ function createLoginLink() {
 }
 
 // Export the UI elements for use in other modules
-export { registerForm, loginLink };
+export {registerForm, loginLink};

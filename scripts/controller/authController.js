@@ -11,12 +11,6 @@ import {validUsername, validPassword, matchingPassword} from '../validation';
 import {checkCredentials, registerUser} from '/scripts/model/userModel';
 import {loadProfile} from './profileController';
 
-const gameJolt = new GameJolt({
-    game_id: 939743,
-    private_key: 'e71e108439ebf30fbc415a74abd8c376'
-});
-
-console.log(typeof gameJolt);
 // DOM elements for managing authentication UI
 const authUI = document.getElementById('auth-ui');
 const loginForm = document.getElementById('login-form');
