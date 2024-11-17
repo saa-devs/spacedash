@@ -8,22 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b9651be2-136e-4a86-9eef-e7920a38b8aa" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/APIs/gamejolt/gamejoltConfig.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/model/statsModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/controller/gameOverController.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/controller/gameOverController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/controller/leaderBoardController.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/controller/leaderBoardController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/controller/profileController.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/controller/profileController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/model/Player.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/model/Player.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/model/leaderboardModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/model/leaderboardModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/model/profileModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/model/profileModel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/view/gameOverView.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/view/gameOverView.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/view/leaderboardView.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/view/leaderboardView.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/animations/survivorAnimations.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/animations/survivorAnimations.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/animations/undeadAnimations.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/animations/undeadAnimations.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/Init.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/Init.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenes/Play.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/Play.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
