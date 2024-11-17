@@ -1,25 +1,28 @@
 /**
  * authView.js
  *
- * This file handles the creation of the user interface elements related to log in and register,
- * including the registration form and the login link.
+ * Handles the creation of user interface elements related to log in and registration.
+ * Includes the registration form and the login link to switch between forms.
  */
 
+// Create the registration form and login link elements
 const registerForm = createRegisterForm();
 const loginLink = createLoginLink();
 
 /**
- * Creates and returns the registration form element, including fields for username,
- * password, and password confirmation, as well as a submit button.
+ * Creates the registration form element with fields for username, password, and password confirmation.
+ * Also includes a submit button for registration.
  *
+ * @function createRegisterForm
  * @returns {HTMLFormElement} The registration form element.
  */
 function createRegisterForm() {
     const registerForm = document.createElement('form');
-    registerForm.setAttribute('method', 'post');
-    registerForm.setAttribute('action', '/register');
-    registerForm.id = 'register-form';
+    registerForm.setAttribute('method', 'post'); // Set form method to POST
+    registerForm.setAttribute('action', '/register'); // Set form action to /register endpoint
+    registerForm.id = 'register-form'; // Assign a unique ID to the form
 
+    // Populate the form with input fields and a submit button
     registerForm.innerHTML = `
         <label for="create-username">
             <input id="create-username" type="text" name="create-username" placeholder="Create a username" required>
@@ -32,20 +35,22 @@ function createRegisterForm() {
         </label>
         <button type="submit" id="register-button">register</button>
     `;
-    return registerForm;
+    return registerForm; // Return the complete registration form element
 }
 
 /**
- * Creates and returns the login link element, which allows users to switch from
- * the registration form to the login form.
+ * Creates the login link element, allowing users to switch back to the login form
+ * from the registration form.
  *
+ * @function createLoginLink
  * @returns {HTMLSpanElement} The login link element.
  */
 function createLoginLink() {
     const loginLink = document.createElement('span');
-    loginLink.id = 'login-link';
-    loginLink.innerText = 'Click here to login';
-    return loginLink;
+    loginLink.id = 'login-link'; // Assign a unique ID to the login link
+    loginLink.innerText = 'Click here to login'; // Set the link text
+    return loginLink; // Return the complete login link element
 }
 
-export {registerForm, loginLink};
+// Export the UI elements for use in other modules
+export { registerForm, loginLink };

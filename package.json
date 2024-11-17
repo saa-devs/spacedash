@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node scripts/server.js",
-    "build": "parcel build index.html --dist-dir dist",
+    "build": "parcel build index.html --dist-dir dist --no-source-maps --no-content-hash",
     "dev": "concurrently \"npm run backend\" \"npm run client\"",
     "backend": "nodemon scripts/server.js",
     "client": "parcel serve index.html --dist-dir dist --port 1234"
@@ -17,7 +17,6 @@
     "@aws-sdk/client-s3": "^3.682.0",
     "@aws-sdk/lib-dynamodb": "^3.679.0",
     "@aws-sdk/s3-request-presigner": "^3.682.0",
-    "axios": "^1.7.7",
     "body-parser": "^1.20.3",
     "concurrently": "^9.0.1",
     "cors": "^2.8.5",

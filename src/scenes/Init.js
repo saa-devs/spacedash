@@ -1,28 +1,32 @@
 /**
  * @fileoverview This file defines the Init scene for the Phaser game.
- * The Init scene loads game assets such as images, spritesheets, and tilemap data,
- * and then starts the 'play' scene.
+ * The Init scene is responsible for loading game assets such as images, spritesheets,
+ * and tilemap data, and transitioning to the 'play' scene once loading is complete.
  */
 
-import survivor from '../../game-assets/sprites/survivor.png';
 import undead from '../../game-assets/sprites/undead.png';
 import hp from '../../game-assets/ui/hp.png';
 import beam from '../../game-assets/effects/beam.png';
 import beamHit from '../../game-assets/effects/beamhit.png';
 import particle from '../../game-assets/effects/particle.png';
-import bluecoin from '../../game-assets/collectables/blue-coin.png'
+import bluecoin from '../../game-assets/collectables/blue-coin.png';
 import levelOne from '../../game-assets/tileset/spacetileset-levelone.json';
 import levelTwo from '../../game-assets/tileset/spacetileset-leveltwo.json';
 import tilesetImage from '../../game-assets/tileset/spacetileset.png';
 
+import {player} from '../../scripts/controller/profileController';
+
 /**
+ * The Init scene is responsible for preloading game assets and transitioning
+ * to the main game scene ('play') once the assets are ready.
+ *
  * @class Init
  * @extends {Phaser.Scene}
- * @classdesc The Init scene is used to preload game assets and then start the main game scene.
  */
 class Init extends Phaser.Scene {
     /**
-     * Initialises the Init scene with the key 'init'.
+     * Initialises the Init scene with the unique key 'init'.
+     * This key is used to reference the scene throughout the game.
      * @constructor
      */
     constructor() {
@@ -30,11 +34,14 @@ class Init extends Phaser.Scene {
     }
 
     /**
-     * Preloads all the necessary assets for the game, including images, spritesheets, and tilemap data.
-     * @method
+     * Preloads all necessary assets for the game.
+     * Assets include tilemaps, spritesheets, and images for the game.
+     *
+     * @method preload
+     * @returns {void}
      */
     preload() {
-        // Load the tilemap JSON file and the corresponding tileset image
+        // Load tilemap JSON files and the corresponding tileset image
         this.load.tilemapTiledJSON('level-one', levelOne);
         this.load.tilemapTiledJSON('level-two', levelTwo);
 
@@ -43,12 +50,12 @@ class Init extends Phaser.Scene {
         this.load.image('beam-hit', beamHit);
         this.load.image('beam', beam);
 
-        // Load the survivor spritesheet
-        this.load.spritesheet('survivor', survivor, {
+        // Load the survivor character spritesheet
+        this.load.spritesheet('survivor', player.getSpritesheet(), {
             frameWidth: 32, frameHeight: 32
         });
 
-        // Load the undead spritesheet
+        // Load the undead enemy spritesheet
         this.load.spritesheet('undead', undead, {
             frameWidth: 32, frameHeight: 32
         });
@@ -58,15 +65,18 @@ class Init extends Phaser.Scene {
             frameWidth: 8, frameHeight: 8
         });
 
-        // Load the blue coin spritesheet
+        // Load the blue coin collectible spritesheet
         this.load.spritesheet('blue-coin', bluecoin, {
             frameWidth: 16, frameHeight: 10
         });
     }
 
     /**
-     * Called after the assets have been loaded. This method starts the 'play' scene.
-     * @method
+     * Starts the 'play' scene after all assets have been successfully preloaded.
+     * This method ensures that the game transitions seamlessly from the Init scene to gameplay.
+     *
+     * @method create
+     * @returns {void}
      */
     create() {
         this.scene.start('play');

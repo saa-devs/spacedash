@@ -1,7 +1,7 @@
 /**
  * profileView.js
  *
- * This file manages the creation and setup of the profile view user interface.
+ * @fileOverview This file manages the creation and setup of the profile view user interface.
  * It includes functions to create the main profile container, generate character
  * selection HTML, and action buttons for gameplay (play, stats, leaderboard, logout).
  */
@@ -31,7 +31,8 @@ function createProfile() {
  *
  * @function generateSelectCharacterHTML
  * @param {HTMLElement} profileUI - The profile ScoreBoard container to append character selection HTML.
- * @param username
+ * @param {string} username - The username to display in the character selection heading.
+ * @returns {void}
  */
 function generateSelectCharacterHTML(profileUI, username) {
     profileUI.innerHTML = `
@@ -50,6 +51,7 @@ function generateSelectCharacterHTML(profileUI, username) {
  * @param {HTMLElement} statsButton - The stats button element.
  * @param {HTMLElement} leaderboardButton - The leaderboard button element.
  * @param {HTMLElement} logoutButton - The logout button element.
+ * @returns {void}
  */
 function generateButtons(playButton, statsButton, leaderboardButton, logoutButton) {
     const actionMenu = document.createElement('div');
@@ -62,7 +64,7 @@ function generateButtons(playButton, statsButton, leaderboardButton, logoutButto
 }
 
 /**
- * Generates the play button for the profile ScoreBoard and attaches a click event to start the game.
+ * Generates the play button for the profile ScoreBoard.
  *
  * @function generatePlayButton
  * @returns {HTMLElement} The play button element.

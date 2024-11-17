@@ -8,26 +8,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b9651be2-136e-4a86-9eef-e7920a38b8aa" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/scripts/controller/gameOverController.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/model/Player.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/controller/leaderBoardController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/controller/statsController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/model/leaderboardModel.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/view/leaderboardView.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/view/statsView.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aws/dynamodb.js" beforeDir="false" afterPath="$PROJECT_DIR$/aws/dynamodb.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/controller/authController.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/controller/authController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/controller/chooseLevelController.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/controller/chooseLevelController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/controller/gameOverController.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/controller/gameOverController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/controller/profileController.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/controller/profileController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/model/Player.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/model/Player.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/model/profileModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/model/profileModel.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/model/userModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/model/userModel.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/validation.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/validation.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/view/authView.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/view/authView.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/view/chooseLevelView.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/view/chooseLevelView.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/view/gameOverView.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/view/gameOverView.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/view/gameView.js" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/view/profileView.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/view/profileView.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gamebar/ScoreBoard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/gamebar/ScoreBoard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/groups/Collectables.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/groups/Collectables.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenes/Init.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/Init.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/scenes/Play.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenes/Play.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sprites/Survivor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sprites/Survivor.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sprites/Collectable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/sprites/Collectable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/utilities.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/utilities.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -133,7 +143,8 @@
       <workItem from="1731082337606" duration="38660000" />
       <workItem from="1731468072076" duration="31828000" />
       <workItem from="1731571299400" duration="44498000" />
-      <workItem from="1731691097741" duration="658000" />
+      <workItem from="1731691097741" duration="26267000" />
+      <workItem from="1731761996674" duration="18955000" />
     </task>
     <servers />
   </component>

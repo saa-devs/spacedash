@@ -1,8 +1,9 @@
 /**
  * authController.js
  *
- * This file handles ScoreBoard interactions for login and register events and switches between the login and registration
- * according to user input.
+ * @fileOverview Handles interactions for login and registration.
+ * Dynamically switches between login and registration forms based on user input.
+ * Also manages the user authentication process and error handling.
  */
 
 import {registerForm, loginLink} from '../view/authView';
@@ -10,32 +11,33 @@ import {validUsername, validPassword, matchingPassword} from '../validation';
 import {checkCredentials, registerUser} from '/scripts/model/userModel';
 import {loadProfile} from './profileController';
 
+// DOM elements for managing authentication UI
 const authUI = document.getElementById('auth-ui');
 const loginForm = document.getElementById('login-form');
 let errorMsg = document.getElementById('error-msg');
 const accountMsg = document.getElementById('account-msg');
 const registerLink = document.getElementById('register-link');
-
 const profileUI = document.getElementById('profile-ui');
+
+// Hide profile UI by default until the user logs in
 profileUI.style.display = 'none';
 
-
 /**
- * Handles login form submission and attempts to authenticate the user.
- * If valid login credentials are provided, hides the 'auth-ui' element and loads the profile.
+ * Handles login form submission and authenticates the user.
+ * If successful, hides the login form and loads the user profile.
  *
  * @event submit
  * @param {Event} event - The form submission event.
  * @returns {void}
  */
 loginForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent form from refreshing the page
+    event.preventDefault(); // Prevent page refresh
 
-    /* Get username and password from form */
+    // Retrieve username and password from input fields
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    /* Attempt to log the user in */
+    // Send login request and handle response
     const response = await checkCredentials(username, password);
     const data = await response.json();
 
@@ -45,23 +47,22 @@ loginForm.addEventListener('submit', async (event) => {
         profileUI.style.display = 'flex';
         await loadProfile(username, newUser);
     } else if (response.status === 401) {
-        errorMsg.innerText = data.message;
+        errorMsg.innerText = data.message; // Display error message for invalid credentials
     }
 });
 
 /**
- * Handles registration form submission by validating input fields before sending the
- * registration request to the server. If registration is successful, it loads the user's profile,
- * otherwise, displays the appropriate error message.
+ * Handles registration form submission, validates inputs,
+ * and attempts to register the user. If successful, loads the profile.
  *
  * @event submit
  * @param {Event} event - The form submission event.
  * @returns {void}
  */
 registerForm.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent form from refreshing the page
+    event.preventDefault(); // Prevent page refresh
 
-    /* Get username and password from form */
+    // Retrieve registration inputs
     const createUsername = document.getElementById('create-username').value;
     const createPassword = document.getElementById('create-password').value;
     const confirmPassword = document.getElementById('confirm-password').value;
@@ -78,61 +79,62 @@ registerForm.addEventListener('submit', async (event) => {
             profileUI.style.display = 'flex';
             await loadProfile(createUsername, newUser);
         } else if (response.status === 409) {
-            errorMsg.innerText = data.message;
+            errorMsg.innerText = data.message; // Display error for username conflicts
         }
     }
-
 });
 
 /**
- * Displays the registration form when the user clicks the "Click here to register" link.
- * Updates ScoreBoard elements to show the registration form and hides the login form.
+ * Switches to the registration form when the user clicks the "Click here to register" link.
+ * Updates the UI to display the registration form and hide the login form.
  *
  * @event click
  * @returns {void}
  */
 registerLink.addEventListener('click', () => {
     errorMsg.innerText = '';
-    loginForm.style.display = 'none'; // Remove login form
-    registerLink.style.display = 'none'; // Remove 'Click here to register' link
-    loginLink.style.display = 'inline-block'; // Display 'Click here to login' link
+    loginForm.style.display = 'none'; // Hide login form
+    registerLink.style.display = 'none'; // Hide 'register' link
+    loginLink.style.display = 'inline-block'; // Show 'login' link
 
     accountMsg.innerText = 'Already have an account? ';
     accountMsg.appendChild(loginLink);
 
-    registerForm.style.display = 'flex'; // Display register form
+    registerForm.style.display = 'flex'; // Display registration form
     authUI.insertBefore(registerForm, authUI.children[1]);
 });
 
 /**
- * Displays the login form when the user clicks the "Click here to login" link.
- * Updates ScoreBoard elements to show the login form and hides the registration form.
+ * Switches to the login form when the user clicks the "Click here to login" link.
+ * Updates the UI to display the login form and hide the registration form.
  *
  * @event click
  * @returns {void}
  */
 loginLink.addEventListener('click', () => {
     errorMsg.innerText = '';
-    registerForm.style.display = 'none'; // Remove register form
-    loginLink.style.display = 'none'; // Remove 'Click here to login' link
+    registerForm.style.display = 'none'; // Hide registration form
+    loginLink.style.display = 'none'; // Hide 'login' link
 
     accountMsg.innerText = "Don't have an account? ";
     accountMsg.appendChild(registerLink);
 
-    registerLink.style.display = 'inline-block'; // Display 'Click here to register' link
+    registerLink.style.display = 'inline-block'; // Show 'register' link
     loginForm.style.display = 'flex'; // Display login form
     authUI.insertBefore(loginForm, authUI.children[1]);
 });
 
 /**
- * Validates registration details, ensuring the username is valid, the password is strong enough,
- * and that both password and confirmation match.
+ * Validates registration details to ensure they meet the required criteria:
+ * - Username must be valid.
+ * - Password must meet strength requirements.
+ * - Password and confirmation must match.
  *
  * @function validRegisterDetails
  * @param {string} createUsername - The username for the new account.
  * @param {string} createPassword - The password for the new account.
  * @param {string} confirmPassword - The confirmation password.
- * @returns {boolean} `true` if all details are valid, `false` otherwise.
+ * @returns {boolean} `true` if all validation passes, otherwise `false`.
  */
 function validRegisterDetails(createUsername, createPassword, confirmPassword) {
     let isValid = true;

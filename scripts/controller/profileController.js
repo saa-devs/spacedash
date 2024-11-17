@@ -1,12 +1,18 @@
 /**
  * profileController.js
  *
- * This file handles the initialisation and setup of the profile ScoreBoard, including character
+ * @fileOverview Handles the initialisation and setup of the player profile, including character
  * selection and action buttons for playing the game, viewing stats/leaderboard, and logging out.
  */
 
-import {getUserInfo, getCharacterURLs, updateCharacter, updatePlayerStats, getPlayerStats} from '../model/profileModel';
-import {Player} from '../model/Player';
+import {
+    getUserInfo,
+    getCharacterURLs,
+    updateCharacter,
+    updatePlayerStats,
+    getPlayerStats,
+    getPlayerSpriteSheet
+} from '../model/profileModel';
 import {
     profileUI,
     generateSelectCharacterHTML,
@@ -17,30 +23,34 @@ import {
     logoutButton
 } from '../view/profileView';
 import {createChooseLevel} from './chooseLevelController';
+import {createStatsView} from './statsController';
+import {createLeaderboard} from './leaderBoardController';
+import {Player} from '../model/Player';
 
-const player = new Player();
+// To store the currently logged in player
+const player = new Player('', '', '', 0, 0);
 
 /**
- * Initialises and displays the profile ScoreBoard, including character selection and action buttons.
+ * Initialises and displays the profile scoreboard, including character selection and action buttons.
  *
  * @async
  * @function loadProfile
+ * @param {string} username - The username of the current player.
+ * @param {boolean} newUser - Indicates whether the user is new (true) or existing (false).
  * @returns {Promise<void>} No return value.
  */
 async function loadProfile(username, newUser) {
-    // Show the loading animation
     const loadingIndicator = document.getElementById('loading-indicator');
     loadingIndicator.style.display = 'block';
 
     try {
-        if (newUser) {
-            await updatePlayerStats(username,
-                0,
+        if (newUser) { // Initialises player stats for a new user
+            await updatePlayerStats(
+                username, 0,
                 0,
                 [],
                 {"1": [], "2": []});
         }
-        // Run the async calls and wait for their completion
         const userInfo = await getUserInfo(username);
         const characterURLs = await storeCharacterURLs();
         const playerStats = await getPlayerStats(username);
@@ -49,23 +59,23 @@ async function loadProfile(username, newUser) {
             player.setUsername(userInfo.username);
             player.setCharacter(userInfo.character);
         } else {
-            console.log("User info could not be retrieved.");
+            console.error("User info could not be retrieved.");
         }
 
-        if (playerStats && playerStats.data) {
+        if (playerStats?.data) {
             player.setAllStats(playerStats.data);
-            console.log(player.getPlayerInfo());
         } else {
-            console.log("Player stats could not be retrieved.");
+            console.error("Player stats could not be retrieved.");
         }
-
         generateSelectCharacterHTML(profileUI, player.username);
+
         if (characterURLs) {
             await insertCharacterLabels(characterURLs);
             selectCharacterSetup();
         }
+
         generateButtons(playButton, statsButton, leaderboardButton, logoutButton);
-        playButtonSetup(playButton);
+        setupButtons(playButton, statsButton, leaderboardButton, logoutButton);
     } catch (error) {
         console.error('Error loading profile:', error);
     } finally {
@@ -73,51 +83,51 @@ async function loadProfile(username, newUser) {
     }
 }
 
-
 /**
- * Fetches and caches character URLs from local storage or from S3 if not already cached.
+ * Fetches and caches character URLs from S3 or local storage.
  *
  * @async
  * @function storeCharacterURLs
- * @returns {Promise<Object|null>} The character URLs from cache or fresh fetch, or `null` if unavailable.
+ * @returns {Promise<Object|null>} The character URLs object or `null` if retrieval fails.
  */
 async function storeCharacterURLs() {
-    let characterURLs;
     try {
-        characterURLs = await getCharacterURLs();
+        return await getCharacterURLs();
     } catch (error) {
-        console.error('Error retrieving characterURLs:', error);
-        characterURLs = null;
+        console.error('Error retrieving character URLs:', error);
+        return null;
     }
-    return characterURLs;
 }
 
 /**
- * Inserts character selection options with images into the profile ScoreBoard, using URLs from local storage.
- * Adds event listeners to each character selection option.
+ * Inserts character selection options into the profile scoreboard, using cached URLs.
  *
  * @function insertCharacterLabels
+ * @param {Object} characterURLs - The URLs of character images.
  * @returns {void}
  */
 function insertCharacterLabels(characterURLs) {
-    // Generate the character selection HTML
     const spriteSelect = document.getElementById('sprite-select');
     spriteSelect.innerHTML = Object.entries(characterURLs).map(([colour, url]) => `
-    <label class="character-label">
-        <input type="radio" name="character" value="${colour}" class="character-radio" id="${colour}-radio" />
-        <img id="${colour}-character" 
-             class="character-image" 
-             alt="${colour.charAt(0).toUpperCase() + colour.slice(1)} Character" 
-             src="${url}" />
-    </label>
+        <label class="character-label">
+            <input type="radio" name="character" value="${colour}" class="character-radio" id="${colour}-radio" />
+            <img id="${colour}-character" 
+                 class="character-image" 
+                 alt="${colour.charAt(0).toUpperCase() + colour.slice(1)} Character" 
+                 src="${url}" />
+        </label>
     `).join('');
 }
 
+/**
+ * Sets up character selection options and updates the character when selected.
+ *
+ * @function selectCharacterSetup
+ * @returns {void}
+ */
 function selectCharacterSetup() {
     const username = player.username;
     const character = player.character;
-
-    // Select all radio buttons and check the one that matches userCharacter
     const radioButtons = document.querySelectorAll("input[name='character']");
     let isCharacterSet = false;
 
@@ -128,36 +138,138 @@ function selectCharacterSetup() {
         }
     });
 
-    // If no matching character is set, check the first radio button by default
     if (radioButtons.length > 0 && !isCharacterSet) {
         radioButtons[0].checked = true;
     }
 
-    // Add click event to each radio button to update session storage on selection
     radioButtons.forEach(radio => {
         radio.addEventListener('change', async () => {
-            await updateCharacter(username, radio.value);
-            player.setCharacter(radio.value);
-            console.log(player.getPlayerInfo());
+            const loadingIndicator = document.getElementById('loading-indicator');
+            profileUI.style.display = 'none';
+            loadingIndicator.style.display = 'block';
+            try {
+                await updateCharacter(username, radio.value);
+                const spriteSheet = await getPlayerSpriteSheet(radio.value);
+                player.setCharacter(radio.value);
+                player.setSpritesheet(spriteSheet);
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            } finally {
+                profileUI.style.display = 'flex';
+                loadingIndicator.style.display = 'none';
+            }
         });
     });
 }
 
 /**
- * Sets up the play button with an event listener that hides the profile ScoreBoard and starts the game.
+ * Sets up action buttons (play, stats, leaderboard, logout) with their respective event listeners.
+ *
+ * @function setupButtons
+ * @param {HTMLElement} playButton - The play button element.
+ * @param {HTMLElement} statsButton - The stats button element.
+ * @param {HTMLElement} leaderboardButton - The leaderboard button element.
+ * @param {HTMLElement} logoutButton - The logout button element.
+ * @returns {void}
+ */
+function setupButtons(playButton, statsButton, leaderboardButton, logoutButton) {
+    playButtonSetup(playButton);
+    statsButtonSetup(statsButton);
+    leaderboardButtonSetup(leaderboardButton);
+    logoutButtonSetup(logoutButton);
+}
+
+/**
+ * Configures the play button to start the game when clicked.
  *
  * @function playButtonSetup
+ * @param {HTMLElement} playButton - The play button element.
  * @returns {void}
  */
 function playButtonSetup(playButton) {
-    playButton.removeEventListener('click', onPlayButtonClick); // Remove any existing listener
-    playButton.addEventListener('click', onPlayButtonClick); // Add the new listener
+    playButton.removeEventListener('click', onPlayButtonClick);
+    playButton.addEventListener('click', onPlayButtonClick);
 }
 
-// Define the click event handler separately
+/**
+ * Event handler for the play button. Hides the profile UI and loads the level selection screen.
+ *
+ * @function onPlayButtonClick
+ * @returns {void}
+ */
 function onPlayButtonClick() {
     profileUI.style.display = 'none';
     createChooseLevel();
+}
+
+/**
+ * Configures the stats button to display player statistics when clicked.
+ *
+ * @function statsButtonSetup
+ * @param {HTMLElement} statsButton - The stats button element.
+ * @returns {void}
+ */
+function statsButtonSetup(statsButton) {
+    statsButton.removeEventListener('click', onStatsButtonClick);
+    statsButton.addEventListener('click', onStatsButtonClick);
+}
+
+/**
+ * Event handler for the stats button. Hides the profile UI and displays the stats view.
+ *
+ * @function onStatsButtonClick
+ * @returns {void}
+ */
+function onStatsButtonClick() {
+    profileUI.style.display = 'none';
+    createStatsView(player);
+}
+
+/**
+ * Configures the leaderboard button to display the leaderboard when clicked.
+ *
+ * @function leaderboardButtonSetup
+ * @param {HTMLElement} leaderboardButton - The leaderboard button element.
+ * @returns {void}
+ */
+function leaderboardButtonSetup(leaderboardButton) {
+    leaderboardButton.removeEventListener('click', leaderboardButtonClick);
+    leaderboardButton.addEventListener('click', leaderboardButtonClick);
+}
+
+/**
+ * Event handler for the leaderboard button. Hides the profile UI and displays the leaderboard.
+ *
+ * @async
+ * @function leaderboardButtonClick
+ * @returns {Promise<void>} No return value.
+ */
+async function leaderboardButtonClick() {
+    profileUI.style.display = 'none';
+    await createLeaderboard();
+}
+
+/**
+ * Configures the logout button to clear session storage and redirect to the homepage when clicked.
+ *
+ * @function logoutButtonSetup
+ * @param {HTMLElement} logoutButton - The logout button element.
+ * @returns {void}
+ */
+function logoutButtonSetup(logoutButton) {
+    logoutButton.removeEventListener('click', onLogoutButtonClick);
+    logoutButton.addEventListener('click', onLogoutButtonClick);
+}
+
+/**
+ * Event handler for the logout button. Clears session storage and redirects to the homepage.
+ *
+ * @function onLogoutButtonClick
+ * @returns {void}
+ */
+function onLogoutButtonClick() {
+    sessionStorage.clear();
+    window.location.href = '/';
 }
 
 export {loadProfile, player};

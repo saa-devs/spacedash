@@ -1,13 +1,10 @@
-// Collectable.js
 import Phaser from 'phaser';
 import blueCoinAnimation from '../animations/blueCoinAnimation';
 
 /**
- * Represents a collectable item in the game, such as a coin.
- *
- * This class extends Phaser's `Arcade.Sprite` and includes custom properties and animations
- * for collectable items. When created, it is added to the scene, scaled, and assigned a default score.
- * The class also registers and plays the 'spin' animation for the item.
+ * @fileOverview Represents a collectable item in the game, such as a coin. This class extends Phaser's `Arcade.Sprite`
+ * and includes custom properties and animations for collectable items. When created, it is added to the scene, scaled,
+ * and assigned a default score. The class also registers and plays the 'spin' animation for the item.
  *
  * @class Collectable
  * @extends Phaser.Physics.Arcade.Sprite
